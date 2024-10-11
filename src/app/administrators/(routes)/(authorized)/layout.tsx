@@ -22,7 +22,11 @@ export default async function AdminRootLayout({ children }: { children: React.Re
 
   return (
     <AdminProvider admin={admin}>
-      <HospitalProvider hospital={hospital}>{children}</HospitalProvider>
+      <HospitalProvider hospital={hospital}>
+        {children}
+        <HospitalsSwitcher />
+        <div className="bg-red-500 py-10 px-4 my-10">{JSON.stringify(hospital)}</div>
+      </HospitalProvider>
     </AdminProvider>
   )
 }
