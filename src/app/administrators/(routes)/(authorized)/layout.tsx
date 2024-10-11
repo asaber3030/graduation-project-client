@@ -13,17 +13,17 @@ import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 
 export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
-  /*   const hospitalIdCookie = Number(cookies().get(ADMIN_COOKIE_HOSPITAL_ID)?.value) ?? 1
+  const hospitalIdCookie = Number(cookies().get(ADMIN_COOKIE_HOSPITAL_ID)?.value) ?? 1
 
   const admin = await getCurrentAdmin()
-  if (!admin) return redirect(adminRoutes.auth.login) */
+  if (!admin) return redirect(adminRoutes.auth.login)
 
-  const hospital = await getCurrentHospital(1)
+  const hospital = await getCurrentHospital(hospitalIdCookie)
 
   return (
     <div>
       <div>
-        {children}
+        <div>{children}</div>
         <div>{JSON.stringify(hospital)}</div>
       </div>
     </div>
