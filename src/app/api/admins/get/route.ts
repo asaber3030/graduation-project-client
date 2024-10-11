@@ -5,7 +5,6 @@ import { findAdmin } from "@/app/administrators/(helpers)/_actions/admin"
 import { response } from "@/lib/api"
 import { extractToken } from "@/lib/utils"
 
-import env from "@/lib/env"
 import jwt from "jsonwebtoken"
 
 export const revalidate = 0
@@ -27,7 +26,6 @@ export async function GET(req: NextRequest) {
     const { password, ...admin } = adminWithPassword
     return response(200, "Authorized", { admin })
   } catch (error) {
-    console.log({ error })
     return response(401, "Unauthorized", { line: 28 })
   }
 }
