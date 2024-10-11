@@ -3,7 +3,7 @@
 import { Admin } from "@prisma/client"
 import { createContext } from "react"
 
-const AdminContext = createContext<Admin | {}>({})
+export const AdminContext = createContext<Admin | {}>({})
 
 type Props = {
   children: React.ReactNode

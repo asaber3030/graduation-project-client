@@ -23,6 +23,7 @@ model Hospital {
   departments      Department[]
   employees        Employee[]
   examinationForms ExaminationForm[]
+  admins           Admin[]
 
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @db.Timestamp()
@@ -133,6 +134,8 @@ model Admin {
   password    String
   phoneNumber String @unique
   email       String @unique
+  hospitalId  Int
+  hospital    Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @db.Timestamp()

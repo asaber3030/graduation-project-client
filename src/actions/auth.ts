@@ -21,12 +21,7 @@ export async function loginAction(
   })
   const json: APIResponse<{ token: string }, any> = await res.json()
   if (json.data?.token) {
-    const expiresIn = rememberMe
-      ? Date.now() + 24 * 60 * 60 * 1000 * 30
-      : Date.now() + 24 * 60 * 60 * 1000 * 1
-    cookies().set(ADMIN_COOKIE_NAME, json?.data.token, {
-      expires: expiresIn,
-    })
+    cookies().set(ADMIN_COOKIE_NAME, json?.data.token)
   }
 
   return json

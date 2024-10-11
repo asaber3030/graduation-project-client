@@ -1,7 +1,10 @@
+import { APIResponse, SearchParams } from "@/types"
 import { clsx, type ClassValue } from "clsx"
 import moment from "moment"
 import { twMerge } from "tailwind-merge"
 import { ZodError } from "zod"
+import { responseCodes } from "./api"
+import { toast } from "sonner"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -38,4 +41,46 @@ export function diffForHuman(date: Date) {
 
 export function formatDate(date: Date, format: string = "lll") {
   return moment(date).format(format)
+}
+
+export function createPagination(
+  params: SearchParams,
+  totalCount: number,
+  skipLimit: boolean = false
+) {
+  const numPage = Number(params.page)
+  const page = isNaN(numPage) ? 1 : numPage
+  const take = params.take ? +params.take : 10
+
+  const orderBy = params.orderBy ?? "id"
+  const orderType = params.orderType ?? "desc"
+
+  let skip = (page - 1) * (skipLimit ? 0 : take)
+
+  const totalPages = Math.ceil(totalCount / take)
+  const hasNextPage = page < totalPages
+
+  return {
+    args: {
+      orderBy: { [orderBy ?? "id"]: orderType ?? "asc" },
+      skip,
+      take,
+    },
+    page,
+    take,
+    orderBy,
+    orderType,
+    skip,
+    totalPages,
+    hasNextPage,
+  }
+}
+
+export function showResponseMessage<T, P>(data: APIResponse<T, P>, exectue?: Function) {
+  if (data?.status === responseCodes.ok) {
+    toast.success(data.message)
+    if (exectue) exectue()
+  } else {
+    toast.error(data.message)
+  }
 }

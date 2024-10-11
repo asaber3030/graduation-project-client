@@ -1,19 +1,29 @@
 import React from "react"
+
+import { HospitalProvider } from "../../(helpers)/_providers/hospital-provider"
 import { AdminProvider } from "../../(helpers)/_providers/admin-provider"
-import { cookies } from "next/headers"
-import { ADMIN_COOKIE_NAME } from "../../(helpers)/_utils/constants"
-import { redirect } from "next/navigation"
-import { adminRoutes } from "../../(helpers)/_utils/routes"
+import { HospitalsSwitcher } from "../../(helpers)/_components/common/hospitals-switcher"
+
+import { ADMIN_COOKIE_HOSPITAL_ID } from "../../(helpers)/_utils/constants"
+
 import { getCurrentAdmin } from "../../(helpers)/_actions/auth"
+import { getCurrentHospital } from "@/actions/app"
+import { adminRoutes } from "../../(helpers)/_utils/routes"
+import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
 
 export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = cookies()
-  const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value
+  const hospitalIdCookie = Number(cookieStore.get(ADMIN_COOKIE_HOSPITAL_ID)?.value) ?? 1
 
-  if (!token) return redirect(adminRoutes.auth.login)
   const admin = await getCurrentAdmin()
-
   if (!admin) return redirect(adminRoutes.auth.login)
 
-  return <AdminProvider admin={admin}>{children}</AdminProvider>
+  const hospital = await getCurrentHospital(hospitalIdCookie)
+
+  return (
+    <AdminProvider admin={admin}>
+      <HospitalProvider hospital={hospital}>{children}</HospitalProvider>
+    </AdminProvider>
+  )
 }

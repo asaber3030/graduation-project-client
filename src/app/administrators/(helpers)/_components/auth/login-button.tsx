@@ -13,6 +13,7 @@ export default function LoginButton() {
       title: data.message,
       description: "Friday, February 10, 2023 at 5:57 PM",
     })
+    console.log({ data })
   })
 
   return (
@@ -20,7 +21,7 @@ export default function LoginButton() {
       <Button
         onClick={() =>
           loginData.mutateLogin({
-            data: { email: "a@a.com", password: "0552320541" },
+            data: { email: "a@a.com", password: "0552320541", hospitalId: 1 },
             rememberMe: false,
           })
         }

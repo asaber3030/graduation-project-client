@@ -8,15 +8,17 @@ import { extractToken } from "@/lib/utils"
 import env from "@/lib/env"
 import jwt from "jsonwebtoken"
 
+export const revalidate = 0
+
 export async function GET(req: NextRequest) {
   try {
-    const authorization = req.headers.get("authorization")
+    const authorization = req.headers.get("Authorization")
     if (!authorization) return response(401, "Unauthorized")
 
     const token = extractToken(authorization) ?? ""
     if (!token) return response(401, "Unauthorized")
 
-    const secret = env.ADMIN_SECRET
+    const secret = process.env.ADMIN_SECRET!
     const decodedResult = jwt.verify(token, secret) as Admin
 
     const adminWithPassword = await findAdmin({ id: decodedResult.id })
@@ -25,6 +27,7 @@ export async function GET(req: NextRequest) {
     const { password, ...admin } = adminWithPassword
     return response(200, "Authorized", { admin })
   } catch (error) {
-    return response(401, "Unauthorized")
+    console.log({ error })
+    return response(401, "Unauthorized", { line: 28 })
   }
 }

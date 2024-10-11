@@ -1,12 +1,11 @@
 import { GlobalLoginSchema } from "@/schema"
 import { NextRequest, NextResponse } from "next/server"
 
-import { findAdminByEmail } from "@/app/administrators/(helpers)/_actions/admin"
+import { findAdmin, findAdminByEmail } from "@/app/administrators/(helpers)/_actions/admin"
 import { response } from "@/lib/api"
 import { extractErrors } from "@/lib/utils"
 
 import env from "@/lib/env"
-import db from "@/services/prisma"
 
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
@@ -21,20 +20,24 @@ export async function POST(req: NextRequest) {
   }
   const secret = env.ADMIN_SECRET
 
-  const findAdmin = await findAdminByEmail(parsedData.data.email)
-  if (!findAdmin) {
+  const admin = await findAdmin({
+    email: parsedData.data.email,
+    hospitalId: parsedData.data.hospitalId,
+  })
+  if (!admin) {
     return response(404, "Admin not found")
   }
 
-  const verifyPassword = await bcrypt.compare(parsedData.data.password, findAdmin.password)
+  const verifyPassword = await bcrypt.compare(parsedData.data.password, admin.password)
   if (!verifyPassword) {
     return response(401, "Invalid password")
   }
 
-  const { password, ...rest } = findAdmin
+  const { password, ...rest } = admin
 
-  const token = jwt.sign({ rest }, secret, {
+  const token = jwt.sign(rest, secret, {
     expiresIn: data?.rememberMe ? "30d" : "1d",
   })
+
   return response(200, "Login successfully", { token })
 }

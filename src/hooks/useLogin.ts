@@ -1,7 +1,6 @@
-import { loginAction } from "@/actions/auth"
-import { adminLoginAction } from "@/app/administrators/(helpers)/_actions/auth"
-import { GlobalLoginData, LoginProvider } from "@/types"
 import { useMutation } from "@tanstack/react-query"
+import { loginAction } from "@/actions/auth"
+import { GlobalLoginData, LoginProvider } from "@/types"
 
 export function useLogin(provider: LoginProvider, onSuccess: Function) {
   const loginMutation = useMutation({
