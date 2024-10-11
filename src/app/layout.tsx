@@ -1,17 +1,24 @@
 import "./globals.css"
 
-import { Metadata } from "next"
+import React from "react"
 
 import { ReactQueryClientProvider } from "@/providers/react-query"
+import { ReduxStoreProvider } from "@/providers/redux"
+import { Toaster } from "@/components/ui/sonner"
 
-export const metadata: Metadata = {}
-
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactQueryClientProvider>
-      <html>
-        <body>{children}</body>
-      </html>
+      <ReduxStoreProvider>
+        <html lang="en">
+          <body>
+            {children}
+            <Toaster />
+          </body>
+        </html>
+      </ReduxStoreProvider>
     </ReactQueryClientProvider>
   )
 }
+
+export default RootLayout

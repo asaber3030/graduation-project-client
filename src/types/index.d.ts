@@ -1,3 +1,6 @@
+import { z } from "zod"
+import { GlobalLoginSchema } from "@/schema"
+
 export type SearchParams = {
   search?: string
   orderBy?: string
@@ -17,6 +20,12 @@ export type APIResponse<T, D> = {
   status: number
   data?: T
   error?: D
+}
+
+export type LoginProvider = "admins" | "patients" | "doctors"
+export type GlobalLoginData = {
+  data: z.infer<typeof GlobalLoginSchema>
+  rememberMe?: boolean
 }
 
 export type Languages = "en" | "ar"

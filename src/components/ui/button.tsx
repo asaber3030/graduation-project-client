@@ -3,29 +3,33 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { LucideIcon } from "lucide-react"
 
 const buttonVariants = cva(
-  "flex gap-2 items-center transition-all justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "text-sm inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 transition-shadow focus:ring-2 focus:ring-blue-300",
   {
     variants: {
       variant: {
-        main: "bg-main text-whiteMain hover:bg-main/90",
-        secondaryMain: "bg-secondaryMain text-blackMain hover:bg-secondaryMain/90",
-        default: "bg-blackMain text-primary-foreground hover:bg-blackMain/90",
+        default:
+          "focus:ring-2 focus:ring-indigo-300 bg-primary text-primary-foreground shadow hover:bg-primary/90",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "focus:ring-2 focus:ring-red-300 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        success:
+          "focus:ring-2 focus:ring-green-300 bg-green-700 text-white shadow-sm hover:bg-green-700/90",
+        warning:
+          "focus:ring-2 focus:ring-orange-300 bg-orange-500 text-white shadow-sm hover:bg-orange-500/90",
+        blue: "focus:ring-2 focus:ring-blue-300 bg-blue-500 text-white shadow-sm hover:bg-blue-500/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border shadow-md bg-gray-100 text-secondary-foreground shadow-sm hover:bg-gray-200/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary px-0 underline-offset-4 hover:underline",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "h-8 p-3 px-3 text-sm",
+        lg: "h-9 px-4",
+        icon: "h-9 w-9",
       },
     },
     defaultVariants: {
@@ -39,17 +43,18 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  icon?: LucideIcon
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, icon: Icon, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+    const hasIcon = !!Icon
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+        {hasIcon && <Icon className={"size-4"} />}
+        {children}
+      </Comp>
     )
   }
 )

@@ -18,12 +18,13 @@ export function actionResponse<T>(status: number, message: string, data?: T) {
   }
 }
 
-export function response(status: number, message: string, data?: unknown) {
+export function response<T, P>(status: number, message: string, data?: T, errors?: P) {
   return NextResponse.json(
     {
       message,
       data,
       status,
+      errors,
     },
     { status }
   )

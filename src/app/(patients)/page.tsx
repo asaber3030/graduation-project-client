@@ -1,5 +1,5 @@
 const PatientsHomePage = () => {
-  return <div>Hello, Patients</div>
+  return <h1>Patients</h1>
 }
 
 export default PatientsHomePage

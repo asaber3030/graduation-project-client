@@ -1,10 +1,7 @@
-import { type ClassValue, clsx } from "clsx"
+import { clsx, type ClassValue } from "clsx"
+import moment from "moment"
 import { twMerge } from "tailwind-merge"
 import { ZodError } from "zod"
-
-import { SearchParams } from "@/types"
-
-import moment from "moment"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -41,25 +38,4 @@ export function diffForHuman(date: Date) {
 
 export function formatDate(date: Date, format: string = "lll") {
   return moment(date).format(format)
-}
-
-export function createPagination(items: SearchParams, skipLimit: boolean = false) {
-  const page = Number(items.page)
-  const take = items.take ? +items.take : 10
-  const orderBy = items.orderBy ?? "id"
-  const orderType = items.orderType ?? "desc"
-
-  let skip = (page - 1) * (skipLimit ? 0 : take)
-
-  return {
-    orderBy: orderBy as string,
-    orderType: orderType as string,
-    skip,
-    take,
-    page,
-  }
-}
-
-export function formatNumber(num: number) {
-  return (Math.round(num * 100) / 100).toFixed(2)
 }
