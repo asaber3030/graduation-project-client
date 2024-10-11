@@ -2,15 +2,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_HOST")
-}
-
 // datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_LOCALHOST")
+//   provider = "postgresql"
+//   url      = env("DATABASE_HOST")
 // }
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_LOCALHOST")
+}
 
 enum Gender {
   Male
@@ -29,6 +29,9 @@ model Hospital {
   employees        Employee[]
   examinationForms ExaminationForm[]
   admins           Admin[]
+  inventories      Inventory[]
+  medicine         Medicine[]
+  prescriptions    Prescription[]
 
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @db.Timestamp()
@@ -103,8 +106,11 @@ model PatientMedication {
 
 model Prescription {
   id        Int     @id @default(autoincrement())
+  hospitalId Int
   patientId Int
   doctorId  Int
+
+  hospital  Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   doctor    Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -195,6 +201,8 @@ model Department {
   doctors          Doctor[]
   emloyees         Employee[]
   examinationForms ExaminationForm[]
+  inventories      Inventory[]
+  
 
   @@map("departments")
 }
@@ -203,8 +211,12 @@ model Inventory {
   id           Int    @id @default(autoincrement())
   name         String
   description  String
+  code         String @unique
   hospitalId   Int
   departmentId Int
+
+  hospital   Hospital   @relation(fields: [hospitalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   medicine Medicine[]
 
@@ -231,6 +243,7 @@ model Medicine {
   id           Int @id @default(autoincrement())
   dosageFormId Int
   inventoryId  Int
+  hospitalId   Int
 
   enName               String
   arName               String
@@ -244,13 +257,14 @@ model Medicine {
   barcode              String?
   image                String?
   concentration        String?
-  dosageForm           DosageForm @relation(fields: [dosageFormId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   price                Float
   numberOfTape         Int        @default(1)
   numberOfPillsPerTape Int        @default(0)
   expirationDate       DateTime?
 
+  hospital           Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   inventory          Inventory            @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dosageForm         DosageForm @relation(fields: [dosageFormId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   ingredients        MedicineIngredient[]
   patientMedications PatientMedication[]
   prescriptionItems  PrescriptionItem[]

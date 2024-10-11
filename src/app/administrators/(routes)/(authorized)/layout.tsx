@@ -2,7 +2,8 @@ import React from "react"
 
 import { HospitalProvider } from "../../(helpers)/_providers/hospital-provider"
 import { AdminProvider } from "../../(helpers)/_providers/admin-provider"
-import { HospitalsSwitcher } from "../../(helpers)/_components/common/hospitals-switcher"
+import { AdminSidebar } from "../../(helpers)/_components/common/sidebar/sidebar"
+import { AdminNavbar } from "../../(helpers)/_components/common/navbar/navbar"
 
 import { ADMIN_COOKIE_HOSPITAL_ID } from "../../(helpers)/_utils/constants"
 
@@ -23,9 +24,13 @@ export default async function AdminRootLayout({ children }: { children: React.Re
   return (
     <AdminProvider admin={admin}>
       <HospitalProvider hospital={hospital}>
-        {children}
-        <HospitalsSwitcher />
-        <div className="bg-red-500 py-10 px-4 my-10">{JSON.stringify(hospital)}</div>
+        <div className="flex">
+          <AdminSidebar />
+          <main className="w-full">
+            <AdminNavbar />
+            <div className="xl:pr-7 py-6 px-4">{children}</div>
+          </main>
+        </div>
       </HospitalProvider>
     </AdminProvider>
   )

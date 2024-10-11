@@ -16,7 +16,7 @@ export const EmptyState = ({
   children,
   width = 100,
   height = 100,
-  imageSrc = "/defaults/empty-search.svg",
+  imageSrc = "/defaults/icons/empty-search.svg",
   className,
   title = "No Data Found",
 }: Props) => {
