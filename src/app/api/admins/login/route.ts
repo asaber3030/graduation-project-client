@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
   const { password, ...rest } = admin
 
   const token = jwt.sign(rest, secret, {
-    expiresIn: data?.rememberMe ? "30d" : "1d",
+    expiresIn: "30d",
   })
 
   return response(200, "Login successfully", { token })
