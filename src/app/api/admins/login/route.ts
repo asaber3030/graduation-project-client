@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     const errors = extractErrors(parsedData.error)
     return response(400, "Validation Error", null, errors)
   }
-  const secret = env.ADMIN_SECRET
+  const secret = process.env.ADMIN_SECRET!
 
   const admin = await findAdmin({
     email: parsedData.data.email,

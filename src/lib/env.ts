@@ -10,9 +10,7 @@ const env = createEnv({
     DOCTOR_SECRET: z.string(),
     API_URL: z.string().url(),
   },
-  client: {
-    PUBLIC_API_URL: z.string().url(),
-  },
+  client: {},
   clientPrefix: "PUBLIC_",
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
