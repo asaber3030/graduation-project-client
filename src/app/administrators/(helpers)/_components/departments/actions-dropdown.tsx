@@ -1,0 +1,55 @@
+"use client"
+
+import { useRouter } from "next/navigation"
+
+import { ATFullDepartment } from "../../_types"
+import { Button } from "@/components/ui/button"
+import { BoxIcon, BriefcaseMedical, MoreHorizontal, Paperclip, Pickaxe, Trash } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import { adminRoutes } from "../../_utils/routes"
+
+type Props = {
+  department: ATFullDepartment
+}
+export const AdminDepartmentActionsDropdown = ({ department }: Props) => {
+  const router = useRouter()
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button icon={MoreHorizontal} variant="outline" className="p-0 px-2" />
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent>
+        <DropdownMenuItem
+          onClick={() => router.push(adminRoutes.departments.departmentInventories(department.id))}
+        >
+          <BoxIcon className="size-4" /> Inventories
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => router.push(adminRoutes.departments.departmentDoctors(department.id))}
+        >
+          <BriefcaseMedical className="size-4" /> Doctors
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => router.push(adminRoutes.departments.departmentEmployees(department.id))}
+        >
+          <Pickaxe className="size-4" /> Employees
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() =>
+            router.push(adminRoutes.departments.departmentExaminationForms(department.id))
+          }
+        >
+          <Paperclip className="size-4" /> Examination Forms
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}

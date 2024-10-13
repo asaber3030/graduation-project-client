@@ -14,9 +14,22 @@ type Props = {
   register?: any
   placeholder?: string
   defaultValue?: string | number
+  valuseAsNumber?: boolean
 }
 
-export const InputField = ({ name, disabled, label, isTextarea = false, placeholder, type, control, register, defaultValue, value }: Props) => {
+export const InputField = ({
+  name,
+  disabled,
+  label,
+  isTextarea = false,
+  placeholder,
+  type,
+  control,
+  register,
+  valuseAsNumber,
+  defaultValue,
+  value,
+}: Props) => {
   return (
     <FormField
       control={control}
@@ -26,11 +39,26 @@ export const InputField = ({ name, disabled, label, isTextarea = false, placehol
           <FormLabel>{label}</FormLabel>
           <FormControl>
             {isTextarea ? (
-              <Textarea disabled={disabled} className="bg-white focus:border-orange-300 resize-none h-32" placeholder={placeholder} {...field}>
+              <Textarea
+                disabled={disabled}
+                className="resize-none h-32"
+                placeholder={placeholder}
+                {...field}
+              >
                 {defaultValue}
               </Textarea>
             ) : (
-              <Input disabled={disabled} className="bg-white focus:border-orange-300" type={type} placeholder={placeholder} defaultValue={defaultValue} {...field} {...register} />
+              <Input
+                disabled={disabled}
+                type={type}
+                placeholder={placeholder}
+                defaultValue={defaultValue}
+                {...field}
+                {...register}
+                onChange={
+                  valuseAsNumber ? (e) => field.onChange(parseInt(e.target.value)) : field.onChange
+                }
+              />
             )}
           </FormControl>
           <FormMessage />

@@ -2,13 +2,36 @@
 
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
-
+import { verifyPassword } from "@/actions/app"
+import { showResponseMessage } from "@/lib/utils"
 import { toast } from "sonner"
 
 import { LoadingButton } from "@/components/common/loading-button"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { APIResponse } from "@/types"
 import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Lock } from "lucide-react"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 interface Props {
   deletedId: number
@@ -16,41 +39,54 @@ interface Props {
   dialogDescription?: string
   children?: React.ReactNode
   asChild?: boolean
-  softAction: (id: number) => Promise<APIResponse<any, any>>
   forceAction: (id: number) => Promise<APIResponse<any, any>>
 }
 
 export const DeleteModal = ({
-  deletedId,
-  children,
-  asChild,
   dialogTitle = "Delete Action",
   dialogDescription = "This action can be reversed later because of soft deletes but you can force delete this item.",
+  deletedId,
+  children,
+  asChild = true,
   forceAction,
-  softAction,
 }: Props) => {
   const [open, setOpen] = useState(false)
+  const [secondaryModal, setSecondaryModal] = useState(false)
+  const [password, setPassword] = useState("")
+
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false)
+
+  const verifyPasswordMutation = useMutation({
+    mutationFn: () => verifyPassword(password),
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        setIsPasswordVerified(true)
+        setSecondaryModal(true)
+        setPassword("")
+        return
+      }
+      showResponseMessage(data)
+    },
+  })
 
   const forceDeleteMutation = useMutation({
     mutationFn: () => forceAction(deletedId),
-    onSuccess: (data) => {
-      toast.message(data.message)
-      setOpen(false)
-    },
-  })
-  const softDeleteMutation = useMutation({
-    mutationFn: () => softAction(deletedId),
-    onSuccess: (data) => {
-      toast.message(data.message)
-      setOpen(false)
-    },
+    onSuccess: (data) =>
+      showResponseMessage(data, () => {
+        setOpen(false)
+        setSecondaryModal(false)
+      }),
   })
 
-  const handleForceDelete = () => {
-    forceDeleteMutation.mutate()
+  const handleVerifyPassword = () => {
+    verifyPasswordMutation.mutate()
   }
-  const handleSoftDelete = () => {
-    softDeleteMutation.mutate()
+
+  const handleDelete = () => {
+    if (isPasswordVerified) {
+      forceDeleteMutation.mutate()
+    }
+    toast.error("Password is not verified")
   }
 
   return (
@@ -61,16 +97,50 @@ export const DeleteModal = ({
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
         </DialogHeader>
+
+        <section>
+          <Label>Application Password</Label>
+          <Input
+            icon={Lock}
+            placeholder="Enter application password"
+            value={password}
+            type="password"
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </section>
+
+        {isPasswordVerified && (
+          <AlertDialog open={secondaryModal} onOpenChange={setSecondaryModal}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Please make sure before processing, This action is not reversible
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel asChild>
+                  <Button variant="outline">Cancel</Button>
+                </AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <Button variant="destructive" onClick={handleDelete}>
+                    Submit
+                  </Button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+
         <DialogFooter>
           <DialogClose asChild>
-            <Button size="sm" variant="blue">
-              Close
-            </Button>
+            <Button variant="outline">Close</Button>
           </DialogClose>
-          <LoadingButton size="sm" loading={softDeleteMutation.isPending} variant="outline-destructive" onClick={handleSoftDelete}>
-            Delete
-          </LoadingButton>
-          <LoadingButton size="sm" loading={forceDeleteMutation.isPending} variant="destructive" onClick={handleForceDelete}>
+          <LoadingButton
+            loading={forceDeleteMutation.isPending}
+            variant="destructive"
+            onClick={handleVerifyPassword}
+          >
             Force Delete
           </LoadingButton>
         </DialogFooter>

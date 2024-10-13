@@ -3,11 +3,12 @@ import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
 import Image from "next/image"
 import Link from "next/link"
 
+import { PatientActionsDropdown } from "@/app/administrators/(helpers)/_components/patients/patient-actions-dropdown"
+import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
+import { EmptyState } from "@/components/common/empty-state"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { SearchParams } from "@/types"
-import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
-import { EmptyState } from "@/components/common/empty-state"
 import {
   Table,
   TableBody,
@@ -20,6 +21,7 @@ import {
 import { diffForHuman, formatDate } from "@/lib/utils"
 import { userImagePlaceholder } from "@/lib/constants"
 import { paginatePatients } from "@/app/administrators/(helpers)/_actions/patients"
+import { adminRoutes } from "@/app/administrators/(helpers)/_utils/routes"
 
 export default async function Patients({ searchParams }: { searchParams: SearchParams }) {
   const patients = await paginatePatients(searchParams)
@@ -27,9 +29,11 @@ export default async function Patients({ searchParams }: { searchParams: SearchP
   return (
     <div>
       <AdminPageTitle title="Patients">
-        <Button icon={Plus} variant="outline">
-          Create
-        </Button>
+        <Link href={adminRoutes.patients.create}>
+          <Button icon={Plus} variant="outline">
+            Create
+          </Button>
+        </Link>
       </AdminPageTitle>
 
       <FilterAll
@@ -37,6 +41,7 @@ export default async function Patients({ searchParams }: { searchParams: SearchP
         orderByArray={[{ label: "Name", name: "name" }]}
         parentClassName="mb-4"
       />
+
       {patients.patients.length === 0 ? (
         <EmptyState />
       ) : (
@@ -57,13 +62,15 @@ export default async function Patients({ searchParams }: { searchParams: SearchP
                 <TableRow key={`doctor-row-${patient.id}`}>
                   <TableCell className="font-medium">{patient.id}</TableCell>
                   <TableCell>{patient.name}</TableCell>
-                  <TableCell>{patient.birthDate ? formatDate(patient.birthDate) : "N/A"}</TableCell>
+                  <TableCell>
+                    {patient.birthDate ? formatDate(patient.birthDate, "l") : "N/A"}
+                  </TableCell>
                   <TableCell>
                     <Image src={userImagePlaceholder} width={40} height={40} alt="doctor Logo" />
                   </TableCell>
                   <TableCell>{diffForHuman(patient.updatedAt)}</TableCell>
                   <TableCell className="text-right space-x-2">
-                    <Button>Update</Button>
+                    <PatientActionsDropdown patient={patient} />
                   </TableCell>
                 </TableRow>
               ))}

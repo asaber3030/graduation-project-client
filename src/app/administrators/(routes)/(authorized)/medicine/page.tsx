@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { SearchParams } from "@/types"
 import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
+import { EmptyState } from "@/components/common/empty-state"
 import {
   Table,
   TableBody,
@@ -15,7 +16,6 @@ import {
 } from "@/components/ui/table"
 
 import { diffForHuman } from "@/lib/utils"
-import { EmptyState } from "@/components/common/empty-state"
 import { paginateMedicine } from "@/app/administrators/(helpers)/_actions/medicine"
 
 export default async function InventoriesPage({ searchParams }: { searchParams: SearchParams }) {
@@ -42,11 +42,10 @@ export default async function InventoriesPage({ searchParams }: { searchParams: 
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">ID</TableHead>
-                <TableHead>EN Name</TableHead>
-                <TableHead>AR Name</TableHead>
+                <TableHead className="w-[200px]">EN Name</TableHead>
+                <TableHead className="w-[200px]">AR Name</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Dosage Form</TableHead>
-                <TableHead>Created</TableHead>
                 <TableHead>Last Update</TableHead>
                 <TableHead className="text-right">Action</TableHead>
               </TableRow>
@@ -55,8 +54,8 @@ export default async function InventoriesPage({ searchParams }: { searchParams: 
               {medicine.medicine.map((medicine) => (
                 <TableRow key={`medicine-row-${medicine.id}`}>
                   <TableCell className="font-medium">{medicine.id}</TableCell>
-                  <TableCell>{medicine.enName}</TableCell>
-                  <TableCell>{medicine.arName}</TableCell>
+                  <TableCell className="line-clamp-1">{medicine.enName}</TableCell>
+                  <TableCell className="line-clamp-1">{medicine.arName}</TableCell>
                   <TableCell>{medicine.price}</TableCell>
                   <TableCell>{medicine.dosageForm.name}</TableCell>
                   <TableCell>{diffForHuman(medicine.createdAt)}</TableCell>

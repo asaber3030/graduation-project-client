@@ -1,0 +1,48 @@
+import {
+  Prescription,
+  Doctor,
+  Patient,
+  PatientMedication,
+  Medicine,
+  PatientVaccination,
+  PrescriptionItem,
+  Hospital,
+  Department,
+  Inventory,
+} from "@prisma/client"
+
+export type ATFullPrescritpion = Prescription & {
+  doctor: Doctor
+  patient: Patient
+  hospital: Hospital
+  _count: {
+    items: number
+  }
+}
+
+export type ATFullDepartment = Department & {
+  hospital: Hospital
+}
+
+export type ATFullInventory = Inventory & {
+  hospital: Hospital
+  department: Department
+}
+
+export type ATFullPatientMedication = PatientMedication & {
+  patient: Patient
+  medicine: Medicine
+}
+
+export type ATFullPatientVaccination = PatientVaccination & {
+  patient: Patient
+}
+
+export type ATFullPrescriptionItem = PrescriptionItem & {
+  medicine: Medicine
+}
+
+export type ATFullDoctor = Doctor & {
+  department: Department
+  hospital: Hospital
+}

@@ -1,0 +1,96 @@
+import Link from "next/link"
+import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
+
+import { SearchParams } from "@/types"
+import { ATFullDepartment, ATFullPrescritpion } from "../../_types"
+import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
+import { LinkBtn } from "@/components/common/link-btn"
+import { OrderBy } from "../../_utils/order-by"
+import { Cog, Eye, Trash } from "lucide-react"
+import { EmptyState } from "@/components/common/empty-state"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+import { diffForHuman, showHospitalName } from "@/lib/utils"
+import { adminRoutes } from "../../_utils/routes"
+import { Button } from "@/components/ui/button"
+import { AdminDepartmentActionsDropdown } from "./actions-dropdown"
+import { AdminUpdateDepartmentModal } from "./update-modal"
+import { DeleteModal } from "../common/delete-modal"
+import { deleteDepartmentAction } from "../../_actions/departments"
+
+type Props = {
+  data: ATFullDepartment[]
+  searchParams: SearchParams
+  hasNextPage: boolean
+  showFilters?: boolean
+}
+
+export const AdminDepartmentsTable = ({
+  showFilters = true,
+  hasNextPage,
+  searchParams,
+  data,
+}: Props) => {
+  return (
+    <>
+      {showFilters && (
+        <FilterAll
+          searchParams={searchParams}
+          orderByArray={OrderBy.departments}
+          parentClassName="mb-4"
+        />
+      )}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <section>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Hospital</TableHead>
+                <TableHead>Last Update</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.map((department) => (
+                <TableRow key={`department-row-${department.id}`}>
+                  <TableCell className="font-medium">{department.id}</TableCell>
+                  <TableCell>{department.name}</TableCell>
+                  <TableCell>
+                    <Link
+                      className="text-blue-500"
+                      href={adminRoutes.hospitals.view(department.hospital.id)}
+                    >
+                      {showHospitalName(department.hospital)}
+                    </Link>
+                  </TableCell>
+                  <TableCell>{diffForHuman(department.updatedAt)}</TableCell>
+                  <TableCell className="text-right space-x-2">
+                    <AdminUpdateDepartmentModal department={department} asChild>
+                      <Button variant="blue">Update</Button>
+                    </AdminUpdateDepartmentModal>
+                    <DeleteModal deletedId={department.id} forceAction={deleteDepartmentAction}>
+                      <Button variant="destructive">Delete</Button>
+                    </DeleteModal>
+                    <AdminDepartmentActionsDropdown department={department} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <DefaultTableFooter searchParams={searchParams} hasNextPage={!hasNextPage} />
+        </section>
+      )}
+    </>
+  )
+}

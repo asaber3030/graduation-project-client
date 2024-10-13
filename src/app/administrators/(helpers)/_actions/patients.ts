@@ -2,8 +2,17 @@
 
 import db from "@/services/prisma"
 
-import { createPagination } from "@/lib/utils"
+import { Patient, Prisma } from "@prisma/client"
+import { PatientSchema } from "@/schema"
 import { SearchParams } from "@/types"
+
+import { actionResponse, responseCodes } from "@/lib/api"
+import { createPagination } from "@/lib/utils"
+import { revalidatePath } from "next/cache"
+import { adminRoutes } from "../_utils/routes"
+import { z } from "zod"
+
+import bcrypt from "bcrypt"
 
 export async function paginatePatients(searchParams: SearchParams) {
   const total = await db.patient.count()
@@ -19,4 +28,61 @@ export async function paginatePatients(searchParams: SearchParams) {
     patients,
     ...pagination,
   }
+}
+
+export async function findPatient(record: Prisma.PatientWhereUniqueInput) {
+  const patient = await db.patient.findUnique({ where: record })
+  if (!patient) return null
+  const { password, ...rest } = patient
+  return rest as Patient
+}
+
+export async function updatePatientAction(id: number, data: z.infer<typeof PatientSchema.update>) {
+  if (data.email) {
+    const emailExists = await db.patient.findFirst({
+      where: { email: data.email, id: { not: id } },
+      select: { id: true },
+    })
+    if (emailExists) return actionResponse(responseCodes.badRequest, "Email already exists")
+  }
+  if (data.phoneNumber) {
+    const phoneExists = await db.patient.findFirst({
+      where: { phoneNumber: data.phoneNumber, id: { not: id } },
+      select: { id: true },
+    })
+    if (phoneExists) return actionResponse(responseCodes.badRequest, "Phone Number already exists")
+  }
+
+  await db.patient.update({
+    where: { id },
+    data,
+  })
+  revalidatePath(adminRoutes.patients.root)
+  revalidatePath(adminRoutes.patients.update(id))
+  revalidatePath(adminRoutes.patients.view(id))
+  return actionResponse(responseCodes.ok, "Patient updated successfully")
+}
+
+export async function createPatientAction(data: z.infer<typeof PatientSchema.create>) {
+  const emailExists = await findPatient({ email: data.email })
+  if (emailExists) return actionResponse(responseCodes.badRequest, "Email already exists")
+
+  const phoneExists = await findPatient({ phoneNumber: data.phoneNumber })
+  if (phoneExists) return actionResponse(responseCodes.badRequest, "Phone Number already exists")
+
+  const nationalExists = await findPatient({ nationalId: data.nationalId })
+  if (nationalExists) return actionResponse(responseCodes.badRequest, "National ID already exists")
+
+  const hashedPassword = await bcrypt.hash(data.password, 10)
+
+  await db.patient.create({
+    data: {
+      ...data,
+      password: hashedPassword,
+      age: +data.age,
+    },
+  })
+
+  revalidatePath(adminRoutes.patients.root)
+  return actionResponse(responseCodes.ok, "Patient created successfully")
 }

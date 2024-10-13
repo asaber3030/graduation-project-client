@@ -12,6 +12,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "hisham-food.s3.us-east-1.amazonaws.com",
       },
+      {
+        protocol: "http",
+        hostname: "dummyimage.com",
+      },
     ],
   },
 

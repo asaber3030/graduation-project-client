@@ -5,9 +5,14 @@ import { twMerge } from "tailwind-merge"
 import { ZodError } from "zod"
 import { responseCodes } from "./api"
 import { toast } from "sonner"
+import { Hospital } from "@prisma/client"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export function showHospitalName(hospital: Hospital | undefined) {
+  return `${hospital?.name} - ${hospital?.location}`
 }
 
 export function generateArray(length: number) {
@@ -83,4 +88,8 @@ export function showResponseMessage<T, P>(data: APIResponse<T, P>, exectue?: Fun
   } else {
     toast.error(data.message)
   }
+}
+
+export function formatNumber(num: number) {
+  return new Intl.NumberFormat("en-US").format(num)
 }

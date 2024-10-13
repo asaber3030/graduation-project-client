@@ -12,20 +12,41 @@ export const adminRoutes = {
     update: (hospitalId: number) => `/administrators/hospitals/${hospitalId}/update`,
     view: (hospitalId: number) => `/administrators/hospitals/${hospitalId}`,
   },
+
+  admins: {
+    root: "/administrators/admins",
+    create: "/administrators/admins/create",
+    update: (patientId: number) => `/administrators/admins/${patientId}/update`,
+    view: (patientId: number) => `/administrators/admins/${patientId}`,
+  },
+
   patients: {
     root: "/administrators/patients",
-    create: "/administrators/users/create",
-    edit: "/administrators/users/edit",
+    create: "/administrators/patients/create",
+    update: (patientId: number) => `/administrators/patients/${patientId}/update`,
+    view: (patientId: number) => `/administrators/patients/${patientId}`,
+    patientPrescriptions: (patientId: number) =>
+      `/administrators/patients/${patientId}/prescriptions`,
+    patientMedications: (patientId: number) => `/administrators/patients/${patientId}/medications`,
+    patientVaccinations: (patientId: number) =>
+      `/administrators/patients/${patientId}/vaccinations`,
+    patientInvoices: (patientId: number) => `/administrators/patients/${patientId}/invoices`,
   },
   doctors: {
     root: "/administrators/doctors",
     create: "/administrators/doctors/create",
-    edit: "/administrators/doctors/edit",
+    update: (patientId: number) => `/administrators/doctors/${patientId}/update`,
+    view: (patientId: number) => `/administrators/doctors/${patientId}`,
+    doctorPrescriptions: (doctorId: number) => `/administrators/doctors/${doctorId}/prescriptions`,
+    doctorMedications: (doctorId: number) => `/administrators/doctors/${doctorId}/medications`,
+    doctorVaccinations: (doctorId: number) => `/administrators/doctors/${doctorId}/vaccinations`,
+    doctorInvoices: (doctorId: number) => `/administrators/doctors/${doctorId}/invoices`,
   },
   medicine: {
     root: "/administrators/medicine",
     create: "/administrators/medicine/create",
-    edit: "/administrators/medicine/edit",
+    update: (medicine: number) => `/administrators/medicine/${medicine}/update`,
+    view: (medicine: number) => `/administrators/medicine/${medicine}`,
   },
   employees: {
     root: "/administrators/employees",
@@ -35,16 +56,32 @@ export const adminRoutes = {
   departments: {
     root: "/administrators/departments",
     create: "/administrators/departments/create",
-    update: (hospitalId: number) => `/administrators/departments/${hospitalId}/update`,
+    update: (departmentId: number) => `/administrators/departments/${departmentId}/update`,
+    view: (departmentId: number) => `/administrators/departments/${departmentId}`,
+    departmentInventories: (departmentId: number) =>
+      `/administrators/departments/${departmentId}/inventories`,
+    departmentDoctors: (departmentId: number) =>
+      `/administrators/departments/${departmentId}/doctors`,
+    departmentExaminationForms: (departmentId: number) =>
+      `/administrators/departments/${departmentId}/examination-forms`,
+    departmentEmployees: (departmentId: number) =>
+      `/administrators/departments/${departmentId}/employees`,
   },
   inventories: {
     root: "/administrators/inventories",
     create: "/administrators/inventories/create",
-    edit: "/administrators/inventories/edit",
+    update: (inventoryId: number) => `/administrators/inventories/${inventoryId}/update`,
+    view: (inventoryId: number) => `/administrators/inventories/${inventoryId}`,
   },
   prescriptions: {
     root: "/administrators/prescriptions",
     create: "/administrators/prescriptions/create",
-    edit: "/administrators/prescriptions/edit",
+    update: (prescriptionId: number) => `/administrators/prescriptions/${prescriptionId}/update`,
+    view: (prescriptionId: number) => `/administrators/prescriptions/${prescriptionId}`,
+    createPrescrptionItem: (prescriptionId: number) =>
+      `/administrators/prescriptions/${prescriptionId}/create-item`,
+
+    updatePrescrptionItem: (prescriptionId: number) =>
+      `/administrators/prescriptions/${prescriptionId}/items/${prescriptionId}`,
   },
 }

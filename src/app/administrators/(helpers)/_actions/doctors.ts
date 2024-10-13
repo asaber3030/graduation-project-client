@@ -1,10 +1,18 @@
 "use server"
 
 import db from "@/services/prisma"
+import bcrypt from "bcrypt"
 
-import { createPagination } from "@/lib/utils"
+import { Doctor, Prisma } from "@prisma/client"
+import { DoctorSchema } from "@/schema"
 import { SearchParams } from "@/types"
+
+import { actionResponse, responseCodes } from "@/lib/api"
+import { createPagination } from "@/lib/utils"
 import { currentHospital } from "@/actions/app"
+import { revalidatePath } from "next/cache"
+import { adminRoutes } from "../_utils/routes"
+import { z } from "zod"
 
 export async function paginateDoctors(searchParams: SearchParams) {
   const hospital = await currentHospital()
@@ -20,6 +28,8 @@ export async function paginateDoctors(searchParams: SearchParams) {
       ],
       hospitalId: hospital.id,
     },
+    include: { department: true, hospital: true },
+
     ...pagination.args,
   })
 
@@ -27,4 +37,82 @@ export async function paginateDoctors(searchParams: SearchParams) {
     doctors,
     ...pagination,
   }
+}
+
+export async function findDoctor(record: Prisma.DoctorWhereUniqueInput) {
+  const doctor = await db.doctor.findUnique({ where: record })
+  if (!doctor) return null
+  const { password, ...rest } = doctor
+  return rest as Doctor
+}
+
+export async function updateDoctorAction(id: number, data: z.infer<typeof DoctorSchema.update>) {
+  if (data.email) {
+    const emailExists = await db.doctor.findFirst({
+      where: { email: data.email, id: { not: id } },
+      select: { id: true },
+    })
+    if (emailExists) return actionResponse(responseCodes.badRequest, "Email already exists")
+  }
+
+  if (data.username) {
+    const usernameExists = await db.doctor.findFirst({
+      where: { username: data.username, id: { not: id } },
+      select: { id: true },
+    })
+    if (usernameExists) return actionResponse(responseCodes.badRequest, "Username already exists")
+  }
+
+  if (data.phoneNumber) {
+    const phoneExists = await db.doctor.findFirst({
+      where: { phoneNumber: data.phoneNumber, id: { not: id } },
+      select: { id: true },
+    })
+    if (phoneExists) return actionResponse(responseCodes.badRequest, "Phone Number already exists")
+  }
+
+  await db.doctor.update({
+    where: { id },
+    data,
+  })
+  revalidatePath(adminRoutes.doctors.root)
+  revalidatePath(adminRoutes.doctors.update(id))
+  revalidatePath(adminRoutes.doctors.view(id))
+  return actionResponse(responseCodes.ok, "Doctor updated successfully")
+}
+
+export async function createDoctorAction(
+  departmentId: number,
+  data: z.infer<typeof DoctorSchema.create>
+) {
+  const hospital = await currentHospital()
+
+  const usernameExists = await findDoctor({ username: data.username })
+  if (usernameExists) return actionResponse(responseCodes.badRequest, "Username already exists")
+
+  const emailExists = await findDoctor({ email: data.email })
+  if (emailExists) return actionResponse(responseCodes.badRequest, "Email already exists")
+
+  const phoneExists = await findDoctor({ phoneNumber: data.phoneNumber })
+  if (phoneExists) return actionResponse(responseCodes.badRequest, "Phone Number already exists")
+
+  const hashedPassword = await bcrypt.hash(data.password, 10)
+
+  await db.doctor.create({
+    data: {
+      ...data,
+      departmentId,
+      hospitalId: hospital.id,
+      password: hashedPassword,
+    },
+  })
+
+  revalidatePath(adminRoutes.doctors.root)
+  return actionResponse(responseCodes.ok, "Doctor created successfully")
+}
+
+export async function deleteDoctorAction(id: number) {
+  await db.doctor.delete({ where: { id } })
+  revalidatePath(adminRoutes.doctors.root)
+  return actionResponse(responseCodes.ok, "Doctor deleted successfully")
 }

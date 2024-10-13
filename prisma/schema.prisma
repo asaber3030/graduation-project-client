@@ -23,6 +23,7 @@ model Hospital {
   logo        String
   description String
   location    String
+  password    String @default("123456")
 
   doctors          Doctor[]
   departments      Department[]
@@ -83,7 +84,7 @@ model PatientVaccination {
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @db.Timestamp()
 
-  @@map("patients_vacanations")
+  @@map("patients_vaccinations")
 }
 
 model PatientMedication {
@@ -114,7 +115,7 @@ model Prescription {
   patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   doctor    Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  PrescriptionItem PrescriptionItem[]
+  items PrescriptionItem[]
 
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @db.Timestamp()
@@ -125,6 +126,8 @@ model Prescription {
 model PrescriptionItem {
   id             Int    @id @default(autoincrement())
   quantity       Int
+  dosage         String @default("")
+  duration       String @default("")
   notes          String
   timesPerDay    Int
   medicineId     Int
@@ -202,7 +205,6 @@ model Department {
   emloyees         Employee[]
   examinationForms ExaminationForm[]
   inventories      Inventory[]
-  
 
   @@map("departments")
 }

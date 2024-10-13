@@ -1,0 +1,103 @@
+import Link from "next/link"
+import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
+
+import Image from "next/image"
+
+import { SearchParams } from "@/types"
+import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
+import { OrderBy } from "../../_utils/order-by"
+import { EmptyState } from "@/components/common/empty-state"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+import { diffForHuman } from "@/lib/utils"
+import { userImagePlaceholder } from "@/lib/constants"
+
+import { AdminDoctorActionsDropdown } from "./doctor-actions-dropdown"
+import { ATFullDoctor } from "../../_types"
+import { adminRoutes } from "../../_utils/routes"
+import { LinkBtn } from "@/components/common/link-btn"
+import { DeleteModal } from "../common/delete-modal"
+import { Button } from "@/components/ui/button"
+import { deleteDoctorAction } from "../../_actions/doctors"
+import { Cog, Trash } from "lucide-react"
+import { Admin } from "@prisma/client"
+import { AdminUpdateAdminModal } from "./update-modal"
+import { deleteAdminAction } from "../../_actions/admin"
+
+type Props = {
+  data: Admin[]
+  searchParams: SearchParams
+  hasNextPage: boolean
+  showFilters?: boolean
+}
+
+export const AdminAdminsTable = ({
+  showFilters = true,
+  hasNextPage,
+  searchParams,
+  data,
+}: Props) => {
+  return (
+    <>
+      {showFilters && (
+        <FilterAll
+          searchParams={searchParams}
+          orderByArray={OrderBy.departments}
+          parentClassName="mb-4"
+        />
+      )}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <section>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead>Last Update</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.map((admin) => (
+                <TableRow key={`admin-row-${admin.id}`}>
+                  <TableCell className="font-medium">{admin.id}</TableCell>
+
+                  <TableCell>{admin.name}</TableCell>
+                  <TableCell>{admin.email}</TableCell>
+                  <TableCell>{admin.phoneNumber}</TableCell>
+                  <TableCell>{diffForHuman(admin.updatedAt)}</TableCell>
+
+                  <TableCell className="text-right space-x-2">
+                    <AdminUpdateAdminModal admin={admin}>
+                      <Button icon={Cog} variant="blue">
+                        Update
+                      </Button>
+                    </AdminUpdateAdminModal>
+
+                    <DeleteModal deletedId={admin.id} forceAction={deleteAdminAction}>
+                      <Button icon={Trash} variant="destructive">
+                        Delete
+                      </Button>
+                    </DeleteModal>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <DefaultTableFooter searchParams={searchParams} hasNextPage={!hasNextPage} />
+        </section>
+      )}
+    </>
+  )
+}

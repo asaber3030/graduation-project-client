@@ -1,3 +1,5 @@
+"use client"
+
 import { Hospital } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,12 +19,16 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
+import { useRouter } from "next/navigation"
+import { adminRoutes } from "../../_utils/routes"
 
 type Props = {
   hospital: Hospital
 }
 
 export const HospitalActionsDropdown = ({ hospital }: Props) => {
+  const router = useRouter()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -48,7 +54,7 @@ export const HospitalActionsDropdown = ({ hospital }: Props) => {
         <DropdownMenuItem>
           <Trash className="size-4" /> Delete
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(adminRoutes.hospitals.update(hospital.id))}>
           <Cog className="size-4" /> Update
         </DropdownMenuItem>
       </DropdownMenuContent>

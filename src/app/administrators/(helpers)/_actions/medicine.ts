@@ -29,3 +29,14 @@ export async function paginateMedicine(searchParams: SearchParams) {
     ...pagination,
   }
 }
+
+export async function searchMedicine(search?: string) {
+  const medicine = await db.medicine.findMany({
+    where: {
+      OR: [{ enName: { contains: search } }, { arName: { contains: search } }],
+    },
+    take: 10,
+  })
+
+  return medicine
+}

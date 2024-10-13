@@ -5,61 +5,64 @@ import { adminRoutes } from "../../(helpers)/_utils/routes"
 import { Metadata } from "next"
 import { URLShortcut } from "../../(helpers)/_components/dashboard/url-shortcut"
 import { adminGlobalIcons } from "../../(helpers)/_utils/constants"
+import { tableCounts } from "../../(helpers)/_actions/dashboard"
 
 export const metadata: Metadata = {
   title: "Dashboard",
 }
 
 export default async function Home() {
+  const counts = await tableCounts()
+
   return (
     <div className="space-y-4">
       <div className="">
         <h1 className="text-3xl font-bold mb-3">Statistics</h1>
         <div className="grid xl:grid-cols-4 grid-cols-1 gap-2">
           <URLBox
-            num={20}
+            num={counts.patients}
             label="Patients"
             icon={adminGlobalIcons.patients}
             href={adminRoutes.patients.root}
           />
           <URLBox
-            num={20}
+            num={counts.hospitals}
             label="Hospitals"
             icon={adminGlobalIcons.hospital}
             href={adminRoutes.hospitals.root}
           />
           <URLBox
-            num={20}
+            num={counts.doctors}
             label="Doctors"
             icon={adminGlobalIcons.doctors}
             href={adminRoutes.doctors.root}
           />
           <URLBox
-            num={20}
+            num={counts.medicine}
             label="Medicine"
             icon={adminGlobalIcons.medicine}
             href={adminRoutes.medicine.root}
           />
           <URLBox
-            num={20}
+            num={counts.employees}
             label="Employees"
             icon={adminGlobalIcons.employees}
             href={adminRoutes.employees.root}
           />
           <URLBox
-            num={20}
+            num={counts.departments}
             label="Departments"
             icon={adminGlobalIcons.departments}
             href={adminRoutes.departments.root}
           />
           <URLBox
-            num={20}
+            num={counts.inventories}
             label="Inventories"
             icon={adminGlobalIcons.inventories}
             href={adminRoutes.inventories.root}
           />
           <URLBox
-            num={20}
+            num={counts.prescriptions}
             label="Prescriptions"
             icon={adminGlobalIcons.prescriptions}
             href={adminRoutes.prescriptions.root}

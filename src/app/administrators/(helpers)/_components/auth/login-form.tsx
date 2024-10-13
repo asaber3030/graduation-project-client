@@ -16,21 +16,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { CheckboxField } from "@/components/common/checkbox-field"
 import { SelectField } from "@/components/common/select-field"
 import { InputField } from "@/components/common/input-field"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { SelectItem } from "@/components/ui/select"
+import { Form } from "@/components/ui/form"
 
 export const AdminLoginForm = () => {
   const { hospitals, isHospitalsLoading } = useHospitals()
@@ -87,6 +74,7 @@ export const AdminLoginForm = () => {
           placeholder="Password"
           control={form.control}
           label="Password"
+          type="password"
         />
 
         <CheckboxField name="rememberMe" control={form.control} label="Remember me?" />

@@ -4,7 +4,9 @@ import {
   HospitalIcon,
   LayoutPanelTop,
   NotepadTextDashed,
+  Paperclip,
   Pickaxe,
+  Pill,
   Syringe,
   Users,
 } from "lucide-react"
@@ -20,5 +22,7 @@ export const adminGlobalIcons = {
   employees: Pickaxe,
   inventories: Box,
   prescriptions: NotepadTextDashed,
-  medicine: Syringe,
+  medicine: Pill,
+  vaccinations: Syringe,
+  examinationForms: Paperclip,
 }
