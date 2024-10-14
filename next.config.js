@@ -9,12 +9,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "hisham-food.s3.us-east-1.amazonaws.com",
-      },
-      {
         protocol: "http",
         hostname: "dummyimage.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cqtrnvlaqqgvchkwzyuq.supabase.co",
       },
     ],
   },

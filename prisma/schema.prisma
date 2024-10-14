@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_HOST")
-}
+   url      = env("DATABASE_HOST")
+ }
 
 //datasource db {
 //  provider = "mysql"
@@ -243,6 +243,7 @@ model DosageForm {
 
 model Medicine {
   id           Int @id @default(autoincrement())
+  
   dosageFormId Int
   inventoryId  Int
   hospitalId   Int
