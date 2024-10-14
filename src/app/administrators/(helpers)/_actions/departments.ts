@@ -63,6 +63,7 @@ export async function createDepartmentAction(data: any) {
       hospitalId: hospital.id,
     },
   })
+  revalidatePath(adminRoutes.departments.root)
   return actionResponse(200, "Department created successfully")
 }
 
@@ -75,6 +76,7 @@ export async function updateDepartmentAction(
     data,
   })
   revalidatePath(adminRoutes.departments.root)
+  revalidatePath(adminRoutes.departments.view(id))
   return actionResponse(200, "Department updated successfully")
 }
 
