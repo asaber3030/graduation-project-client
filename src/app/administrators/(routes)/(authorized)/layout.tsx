@@ -8,18 +8,16 @@ import { AdminNavbar } from "../../(helpers)/_components/common/navbar/navbar"
 import { ADMIN_COOKIE_HOSPITAL_ID } from "../../(helpers)/_utils/constants"
 
 import { getCurrentAdmin } from "../../(helpers)/_actions/auth"
-import { getCurrentHospital } from "@/actions/app"
+import { currentHospital, getCurrentHospital } from "@/actions/app"
 import { adminRoutes } from "../../(helpers)/_utils/routes"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 
 export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
-  const hospitalIdCookie = Number(cookies().get(ADMIN_COOKIE_HOSPITAL_ID)?.value ?? 1) ?? 1
-
   const admin = await getCurrentAdmin()
   if (!admin) return redirect(adminRoutes.auth.login)
 
-  const hospital = await getCurrentHospital(hospitalIdCookie)
+  const hospital = await currentHospital()
 
   return (
     <AdminProvider admin={admin}>

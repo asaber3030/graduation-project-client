@@ -7,10 +7,10 @@ datasource db {
   url      = env("DATABASE_HOST")
 }
 
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_LOCALHOST")
-// }
+//datasource db {
+//  provider = "mysql"
+//  url      = env("DATABASE_LOCALHOST")
+//}
 
 enum Gender {
   Male
