@@ -2,10 +2,11 @@ import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/ti
 
 import { AdminPrescriptionsTable } from "@/app/administrators/(helpers)/_components/prescriptions/table"
 import { SearchParams } from "@/types"
-import { Button } from "@/components/ui/button"
+import { LinkBtn } from "@/components/common/link-btn"
 import { Plus } from "lucide-react"
 
 import { paginatePrescriptions } from "@/app/administrators/(helpers)/_actions/prescriptions"
+import { adminRoutes } from "@/app/administrators/(helpers)/_utils/routes"
 
 export default async function Prescriptions({ searchParams }: { searchParams: SearchParams }) {
   const prescriptions = await paginatePrescriptions(searchParams)
@@ -13,9 +14,9 @@ export default async function Prescriptions({ searchParams }: { searchParams: Se
   return (
     <div>
       <AdminPageTitle title="Prescriptions">
-        <Button icon={Plus} variant="outline">
+        <LinkBtn icon={Plus} variant="outline" href={adminRoutes.prescriptions.create}>
           Create
-        </Button>
+        </LinkBtn>
       </AdminPageTitle>
 
       <AdminPrescriptionsTable

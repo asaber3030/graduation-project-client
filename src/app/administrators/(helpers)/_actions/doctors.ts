@@ -116,3 +116,18 @@ export async function deleteDoctorAction(id: number) {
   revalidatePath(adminRoutes.doctors.root)
   return actionResponse(responseCodes.ok, "Doctor deleted successfully")
 }
+
+export async function searchDoctors(search?: string) {
+  const doctors = await db.doctor.findMany({
+    where: {
+      OR: [
+        { name: { contains: search } },
+        { username: { contains: search } },
+        { email: { contains: search } },
+      ],
+      hospitalId: (await currentHospital()).id,
+    },
+    take: 10,
+  })
+  return doctors
+}

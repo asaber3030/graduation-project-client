@@ -51,7 +51,8 @@ export const adminRoutes = {
   employees: {
     root: "/administrators/employees",
     create: "/administrators/employees/create",
-    edit: "/administrators/employees/edit",
+    update: (employeeId: number) => `/administrators/employees/${employeeId}/update`,
+    view: (employeeId: number) => `/administrators/employees/${employeeId}`,
   },
   departments: {
     root: "/administrators/departments",

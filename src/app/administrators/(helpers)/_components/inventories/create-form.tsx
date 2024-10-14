@@ -15,7 +15,6 @@ import { InventorySchema } from "@/schema"
 import { LoadingButton } from "@/components/common/loading-button"
 import { InputField } from "@/components/common/input-field"
 import { Form } from "@/components/ui/form"
-import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { CommandItem } from "@/components/ui/command"
 import { ArrowRight, Loader2 } from "lucide-react"
@@ -50,10 +49,6 @@ export const AdminCreateInventtoryModal = () => {
     onSuccess: (data) => showResponseMessage(data),
   })
 
-  useEffect(() => {
-    refetchDepartments()
-  }, [searchValue])
-
   const onCommandSelect = (currentValue: string, id: number) => {
     setSelectedSelecetedName(currentValue)
     setDepartmentId(id)
@@ -61,8 +56,11 @@ export const AdminCreateInventtoryModal = () => {
 
   const handleSubmit = () => {
     createMutation.mutate({ data: form.getValues() })
-    console.log(form.getValues())
   }
+
+  useEffect(() => {
+    refetchDepartments()
+  }, [searchValue])
 
   return (
     <Form {...form}>

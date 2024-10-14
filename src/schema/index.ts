@@ -170,6 +170,42 @@ export const PatientSchema = {
   }),
 }
 
+export const EmployeeSchema = {
+  create: z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    username: z.string().min(1, { message: "Username is required" }),
+    password: z.string().min(1, { message: "Password is required" }),
+    phoneNumber: z
+      .string()
+      .min(1, { message: "Phone Number is required" })
+      .regex(phoneNumberRegEx, { message: "Invalid Phone Number" }),
+    email: z.string().email(),
+    jobTitle: z.string().min(1, { message: "Job Title is required" }),
+  }),
+  update: z.object({
+    name: z.string().min(1, { message: "Name is required" }).optional(),
+    username: z.string().min(1, { message: "Username is required" }).optional(),
+    phoneNumber: z
+      .string()
+      .min(1, { message: "Phone Number is required" })
+      .regex(phoneNumberRegEx, { message: "Invalid Phone Number" })
+      .optional(),
+    email: z.string().email().optional(),
+    jobTitle: z.string().min(1, { message: "Job Title is required" }).optional(),
+  }),
+}
+
+export const PrescriptionSchema = {
+  create: z.object({
+    patientId: z.number().min(1, { message: "Patient is required" }),
+    doctorId: z.number().min(1, { message: "Doctor is required" }),
+  }),
+  update: z.object({
+    patientId: z.number().min(1, { message: "Patient is required" }).optional(),
+    doctorId: z.number().min(1, { message: "Doctor is required" }).optional(),
+  }),
+}
+
 export const PrescriptionItemSchema = {
   create: z.object({
     quantity: z.number().min(1, { message: "Quantity is required" }),
@@ -246,5 +282,45 @@ export const DoctorSchema = {
   login: z.object({
     email: z.string().email().min(1, { message: "Email is required" }),
     password: z.string().min(1, { message: "Password is required!" }),
+  }),
+}
+
+export const MedicineSchema = {
+  create: z.object({
+    enName: z.string().min(1, { message: "English Name is required" }),
+    arName: z.string().min(1, { message: "Arabic Name is required" }),
+    enDescription: z.string().min(1, { message: "English Description is required" }),
+    arDescription: z.string().min(1, { message: "Arabic Description is required" }),
+    activeIngredients: z.string().min(1, { message: "Active Ingredients is required" }),
+    totalTablets: z.number().min(1, { message: "Total Tablets is required" }),
+    bgColor: z.string().min(1, { message: "Background Color is required" }).optional(),
+    textColor: z.string().min(1, { message: "Text Color is required" }).optional(),
+    notes: z.string().min(1, { message: "Notes is required" }).optional(),
+    concentration: z.string().min(1, { message: "Concentration is required" }).optional(),
+    price: z.number().min(1, { message: "Price is required" }),
+    numberOfTape: z.number().min(1, { message: "Number of Tape is required" }).optional(),
+    numberOfPillsPerTape: z
+      .number()
+      .min(1, { message: "Number of Pills be Tap is required" })
+      .optional(),
+  }),
+
+  update: z.object({
+    enName: z.string().min(1, { message: "English Name is required" }).optional(),
+    arName: z.string().min(1, { message: "Arabic Name is required" }).optional(),
+    enDescription: z.string().min(1, { message: "English Description is required" }).optional(),
+    arDescription: z.string().min(1, { message: "Arabic Description is required" }).optional(),
+    activeIngredients: z.string().min(1, { message: "Active Ingredients is required" }).optional(),
+    totalTablets: z.number().min(1, { message: "Total Tablets is required" }).optional(),
+    bgColor: z.string().min(1, { message: "Background Color is required" }).optional(),
+    textColor: z.string().min(1, { message: "Text Color is required" }).optional(),
+    notes: z.string().min(1, { message: "Notes is required" }).optional(),
+    concentration: z.string().min(1, { message: "Concentration is required" }).optional(),
+    price: z.number().min(1, { message: "Price is required" }).optional(),
+    numberOfTape: z.number().min(1, { message: "Number of Tape is required" }).optional(),
+    numberOfPillsPerTap: z
+      .number()
+      .min(1, { message: "Number of Pills be Tap is required" })
+      .optional(),
   }),
 }

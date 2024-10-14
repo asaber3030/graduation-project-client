@@ -54,7 +54,13 @@ export default async function Hospitals({ searchParams }: { searchParams: Search
             <TableRow key={`hospital-row-${hospital.id}`}>
               <TableCell className="font-medium">{hospital.id}</TableCell>
               <TableCell>
-                <Image src={hospital.logo} width={40} height={40} alt="Hospital Logo" />
+                <Image
+                  className="rounded-md object-cover"
+                  src={hospital.logo}
+                  width={40}
+                  height={40}
+                  alt="Hospital Logo"
+                />
               </TableCell>
               <TableCell>{hospital.name}</TableCell>
               <TableCell>{hospital.location}</TableCell>

@@ -6,7 +6,7 @@ import { createPagination } from "@/lib/utils"
 import { SearchParams } from "@/types"
 import { currentHospital } from "@/actions/app"
 import { Prisma } from "@prisma/client"
-import { PrescriptionItemSchema } from "@/schema"
+import { PrescriptionItemSchema, PrescriptionSchema } from "@/schema"
 import { actionResponse } from "@/lib/api"
 import { z } from "zod"
 import { revalidatePath } from "next/cache"
@@ -32,6 +32,7 @@ export async function paginatePrescriptions(searchParams: SearchParams, patientI
     include: {
       patient: true,
       doctor: true,
+      hospital: true,
       _count: {
         select: { items: true },
       },
@@ -69,6 +70,57 @@ export async function findPrescriptionMedications(id: number) {
       medicine: true,
     },
   })
+}
+
+export async function createPrescriptionAction(patientId: number, doctorId: number) {
+  const hospital = await currentHospital()
+
+  if (!patientId || patientId === 0) return actionResponse(400, "Patient is invalid")
+  if (!doctorId || doctorId === 0) return actionResponse(400, "Doctor is invalid")
+
+  await db.prescription.create({
+    data: {
+      patientId,
+      doctorId,
+      hospitalId: hospital.id,
+    },
+  })
+  revalidatePath(adminRoutes.prescriptions.root)
+  return actionResponse(200, "Prescription created")
+}
+
+export async function updatePrescriptionAction(
+  prescriptionId: number,
+  patientId: number,
+  doctorId: number
+) {
+  if (!patientId || patientId === 0) return actionResponse(400, "Patient is invalid")
+  if (!doctorId || doctorId === 0) return actionResponse(400, "Doctor is invalid")
+
+  const prescription = await db.prescription.findUnique({
+    where: { id: prescriptionId },
+  })
+
+  const validPatientId = patientId || prescription?.patientId
+  const validDoctorId = doctorId || prescription?.doctorId
+
+  await db.prescription.update({
+    where: { id: prescriptionId },
+    data: {
+      patientId: validPatientId,
+      doctorId: validDoctorId,
+    },
+  })
+  revalidatePath(adminRoutes.prescriptions.root)
+  return actionResponse(200, "Prescription Updated.")
+}
+
+export async function deletePrescriptionAction(prescriptionId: number) {
+  await db.prescription.delete({
+    where: { id: prescriptionId },
+  })
+  revalidatePath(adminRoutes.prescriptions.root)
+  return actionResponse(200, "Prescription Deleted.")
 }
 
 export async function createPrescriptionItemAction(

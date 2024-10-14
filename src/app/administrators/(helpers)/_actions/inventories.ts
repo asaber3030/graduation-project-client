@@ -35,6 +35,17 @@ export async function paginateInventories(searchParams: SearchParams) {
   }
 }
 
+export async function searchInventories(search?: string) {
+  const inventories = await db.inventory.findMany({
+    where: {
+      OR: [{ name: { contains: search } }, { code: { contains: search } }],
+    },
+    take: 10,
+  })
+
+  return inventories
+}
+
 export async function findInventoryById(id: number) {
   return await db.inventory.findUnique({
     where: { id },

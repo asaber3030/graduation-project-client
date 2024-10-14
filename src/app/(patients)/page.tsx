@@ -1,5 +1,3 @@
-const PatientsHomePage = () => {
-  return <h1>Patients</h1>
+export default function PatientsPage() {
+  return <div></div>
 }
-
-export default PatientsHomePage

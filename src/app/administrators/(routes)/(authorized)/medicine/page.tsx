@@ -1,22 +1,12 @@
 import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
-import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
 
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { AdminMedicineTable } from "@/app/administrators/(helpers)/_components/medicine/table"
 import { SearchParams } from "@/types"
-import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
-import { EmptyState } from "@/components/common/empty-state"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { LinkBtn } from "@/components/common/link-btn"
+import { Plus } from "lucide-react"
 
-import { diffForHuman } from "@/lib/utils"
 import { paginateMedicine } from "@/app/administrators/(helpers)/_actions/medicine"
+import { adminRoutes } from "@/app/administrators/(helpers)/_utils/routes"
 
 export default async function InventoriesPage({ searchParams }: { searchParams: SearchParams }) {
   const medicine = await paginateMedicine(searchParams)
@@ -24,52 +14,16 @@ export default async function InventoriesPage({ searchParams }: { searchParams: 
   return (
     <div>
       <AdminPageTitle title="Medicine">
-        <Button icon={Plus} variant="outline">
+        <LinkBtn icon={Plus} variant="outline" href={adminRoutes.medicine.create}>
           Create
-        </Button>
+        </LinkBtn>
       </AdminPageTitle>
 
-      <FilterAll
+      <AdminMedicineTable
+        data={medicine.medicine}
+        hasNextPage={medicine.hasNextPage}
         searchParams={searchParams}
-        orderByArray={[{ label: "Name", name: "name" }]}
-        parentClassName="mb-4"
       />
-      {medicine.medicine.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <section>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">ID</TableHead>
-                <TableHead className="w-[200px]">EN Name</TableHead>
-                <TableHead className="w-[200px]">AR Name</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Dosage Form</TableHead>
-                <TableHead>Last Update</TableHead>
-                <TableHead className="text-right">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {medicine.medicine.map((medicine) => (
-                <TableRow key={`medicine-row-${medicine.id}`}>
-                  <TableCell className="font-medium">{medicine.id}</TableCell>
-                  <TableCell className="line-clamp-1">{medicine.enName}</TableCell>
-                  <TableCell className="line-clamp-1">{medicine.arName}</TableCell>
-                  <TableCell>{medicine.price}</TableCell>
-                  <TableCell>{medicine.dosageForm.name}</TableCell>
-                  <TableCell>{diffForHuman(medicine.createdAt)}</TableCell>
-                  <TableCell>{diffForHuman(medicine.updatedAt)}</TableCell>
-                  <TableCell className="text-right space-x-2">
-                    <Button>View</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <DefaultTableFooter searchParams={searchParams} hasNextPage={!medicine.hasNextPage} />
-        </section>
-      )}
     </div>
   )
 }

@@ -8,6 +8,8 @@ import { ADMIN_COOKIE_NAME } from "@/app/administrators/(helpers)/_utils/constan
 
 import { apiURL } from "@/lib/constants"
 import { cookies } from "next/headers"
+import { revalidatePath } from "next/cache"
+import supabase from "@/services/supabase"
 
 export async function loginAction(
   provider: LoginProvider,

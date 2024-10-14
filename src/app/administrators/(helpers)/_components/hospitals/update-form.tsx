@@ -4,6 +4,7 @@ import Link from "next/link"
 
 import { useForm } from "react-hook-form"
 import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateHospitalAction } from "../../_actions/hospitals"
@@ -17,8 +18,18 @@ import { Hospital } from "@prisma/client"
 
 import { Form } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
+import { FileField } from "@/components/common/file-field"
+import { FileIcon } from "lucide-react"
+import { z } from "zod"
+
+type Mutation = {
+  data: z.infer<typeof HospitalSchema.update>
+  formData?: FormData
+}
 
 export const UpdateHospitalForm = ({ hospital }: { hospital: Hospital }) => {
+  const [file, setFile] = useState<File | undefined>(undefined)
+
   const form = useForm({
     resolver: zodResolver(HospitalSchema.update),
     defaultValues: {
@@ -29,17 +40,25 @@ export const UpdateHospitalForm = ({ hospital }: { hospital: Hospital }) => {
   })
 
   const updateMutation = useMutation({
-    mutationFn: () => updateHospitalAction(hospital.id, form.getValues()),
+    mutationFn: ({ data, formData }: Mutation) => updateHospitalAction(hospital.id, data, formData),
     onSuccess: (data) => showResponseMessage(data),
   })
 
   const handleUpdate = () => {
-    updateMutation.mutate()
+    const formData = new FormData()
+    formData.append("logo", file as Blob)
+    updateMutation.mutate({ data: form.getValues(), formData })
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-4">
+        <FileField
+          label="Hospital Logo"
+          icon={FileIcon}
+          onChange={(event) => setFile(event.target.files?.[0])}
+        />
+
         <InputField name="name" placeholder="Name" label="Name" control={form.control} />
 
         <InputField

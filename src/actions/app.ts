@@ -7,6 +7,17 @@ import { ADMIN_COOKIE_HOSPITAL_ID } from "@/app/administrators/(helpers)/_utils/
 import { Hospital, Prisma } from "@prisma/client"
 import { cookies } from "next/headers"
 import { actionResponse } from "@/lib/api"
+import supabase from "@/services/supabase"
+
+export async function uploadFile(file: File, bucketName: string, fileName: string) {
+  const { data, error } = await supabase.storage.from("main").upload(fileName, file, {
+    cacheControl: "3600",
+    upsert: false,
+  })
+  if (error) throw new Error(error.message)
+  const publicUrl = supabase.storage.from("main").getPublicUrl(fileName).data.publicUrl
+  return publicUrl
+}
 
 export async function getHospitals() {
   const hospitals = await db.hospital.findMany({ orderBy: { id: "desc" } })

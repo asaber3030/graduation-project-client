@@ -9,6 +9,8 @@ import {
   Hospital,
   Department,
   Inventory,
+  Employee,
+  DosageForm,
 } from "@prisma/client"
 
 export type ATFullPrescritpion = Prescription & {
@@ -45,4 +47,15 @@ export type ATFullPrescriptionItem = PrescriptionItem & {
 export type ATFullDoctor = Doctor & {
   department: Department
   hospital: Hospital
+}
+
+export type ATFullEmployee = Employee & {
+  department: Department
+  hospital: Hospital
+}
+
+export type ATFullMedicine = Medicine & {
+  hospital: Hospital
+  dosageForm: DosageForm
+  inventory: Inventory
 }

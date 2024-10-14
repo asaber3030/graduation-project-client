@@ -86,3 +86,13 @@ export async function createPatientAction(data: z.infer<typeof PatientSchema.cre
   revalidatePath(adminRoutes.patients.root)
   return actionResponse(responseCodes.ok, "Patient created successfully")
 }
+
+export async function searchPatients(search?: string) {
+  const patients = await db.patient.findMany({
+    where: {
+      OR: [{ name: { contains: search } }, { email: { contains: search } }],
+    },
+    take: 10,
+  })
+  return patients
+}
