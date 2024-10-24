@@ -1,18 +1,22 @@
 "use client"
 
-import { useMutation } from "@tanstack/react-query"
-import { useForm } from "react-hook-form"
-import React, { useState } from "react"
+import React from "react"
 
+import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+
+import { quickAssignPermissionAction } from "../../_actions/permissions"
 import { showResponseMessage } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createDepartmentAction } from "../../_actions/departments"
 import { z } from "zod"
 
-import { DepartmentSchema } from "@/schema"
+import { EmployeePermissionSchema } from "@/schema"
+import { ResourcePermission } from "@prisma/client"
 import { LoadingButton } from "@/components/common/loading-button"
-import { InputField } from "@/components/common/input-field"
+import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
+
 import {
   Dialog,
   DialogClose,
@@ -23,39 +27,46 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { InputField } from "@/components/common/input-field"
 
 type Props = {
+  permission: ResourcePermission
   children: React.ReactNode
   asChild?: boolean
 }
 
 type Mutation = {
-  data: z.infer<typeof DepartmentSchema.create>
+  data: z.infer<typeof EmployeePermissionSchema.quickAssign>
+  permissionId: number
 }
 
-export const AdminCreateDepartmentModal = ({ asChild, children }: Props) => {
+export const AdminQuickAssignPermissionToEmployeeModal = ({
+  permission,
+  asChild,
+  children,
+}: Props) => {
   const [open, setOpen] = useState(false)
 
   const form = useForm({
-    resolver: zodResolver(DepartmentSchema.create),
+    resolver: zodResolver(EmployeePermissionSchema.quickAssign),
     defaultValues: {
-      name: "",
-      description: "",
+      employeeEmail: "",
     },
   })
 
   const createMutation = useMutation({
-    mutationFn: ({ data }: Mutation) => createDepartmentAction(data),
+    mutationFn: ({ data, permissionId }: Mutation) =>
+      quickAssignPermissionAction(permissionId, data),
     onSuccess: (data) =>
       showResponseMessage(data, () => {
-        setOpen(false)
         form.reset()
+        setOpen(false)
       }),
   })
 
   const handleSubmit = () => {
-    createMutation.mutate({ data: form.getValues() })
+    createMutation.mutate({ data: form.getValues(), permissionId: permission.id })
   }
 
   return (
@@ -63,28 +74,29 @@ export const AdminCreateDepartmentModal = ({ asChild, children }: Props) => {
       <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Department</DialogTitle>
+          <DialogTitle>Assign Permission</DialogTitle>
           <DialogDescription>
-            Create Department information, It's assigned to current selected hospital
+            Assigning this permission will give the employee access to the selected permission.
           </DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
-            <InputField name="name" label="Name" placeholder="Enter Name" control={form.control} />
             <InputField
-              name="description"
-              label="Description"
-              placeholder="Enter Description"
-              isTextarea
               control={form.control}
+              label="Employee Email"
+              name="employeeEmail"
+              placeholder="Employee Email"
+              type="email"
             />
+
             <DialogFooter>
               <section className="flex gap-2">
                 <DialogClose asChild>
                   <Button variant="outline">Close</Button>
                 </DialogClose>
                 <LoadingButton type="submit" loading={createMutation.isPending} variant="success">
-                  Create
+                  Assign
                 </LoadingButton>
               </section>
             </DialogFooter>

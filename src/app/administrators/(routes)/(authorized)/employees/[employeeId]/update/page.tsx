@@ -1,12 +1,11 @@
 import React from "react"
 import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
 
+import { ATFullEmployee } from "@/app/administrators/(helpers)/_types"
 import { AdminUpdateEmployeeForm } from "@/app/administrators/(helpers)/_components/employees/update-form"
 
 import { findEmployee } from "@/app/administrators/(helpers)/_actions/employees"
 import { notFound } from "next/navigation"
-import { Employee } from "@prisma/client"
-import { ATFullEmployee } from "@/app/administrators/(helpers)/_types"
 
 type Props = {
   params: {

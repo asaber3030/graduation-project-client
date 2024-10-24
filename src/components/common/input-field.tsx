@@ -2,6 +2,8 @@ import { Control } from "react-hook-form"
 import { Input } from "../ui/input"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Textarea } from "../ui/textarea"
+import { ClassValue } from "class-variance-authority/types"
+import { cn } from "@/lib/utils"
 
 type Props = {
   label: string
@@ -15,6 +17,7 @@ type Props = {
   placeholder?: string
   defaultValue?: string | number
   valuseAsNumber?: boolean
+  className?: ClassValue
 }
 
 export const InputField = ({
@@ -29,6 +32,7 @@ export const InputField = ({
   valuseAsNumber,
   defaultValue,
   value,
+  className,
 }: Props) => {
   return (
     <FormField
@@ -53,6 +57,7 @@ export const InputField = ({
                 type={type}
                 placeholder={placeholder}
                 defaultValue={defaultValue}
+                className={cn(className)}
                 {...field}
                 {...register}
                 onChange={

@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ATFullPrescritpion } from "../../_types"
 import { adminRoutes } from "../../_utils/routes"
 import { formatDate, showHospitalName } from "@/lib/utils"

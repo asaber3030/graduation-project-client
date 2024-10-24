@@ -6,10 +6,11 @@ import React, { useState } from "react"
 
 import { showResponseMessage } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createDepartmentAction } from "../../_actions/departments"
 import { z } from "zod"
+import { toast } from "sonner"
+import { createPermissionGroupAction } from "../../_actions/permissions-groups"
 
-import { DepartmentSchema } from "@/schema"
+import { PermissionGroupSchema } from "@/schema"
 import { LoadingButton } from "@/components/common/loading-button"
 import { InputField } from "@/components/common/input-field"
 import { Form } from "@/components/ui/form"
@@ -31,28 +32,41 @@ type Props = {
 }
 
 type Mutation = {
-  data: z.infer<typeof DepartmentSchema.create>
+  data: z.infer<typeof PermissionGroupSchema.create>
 }
 
-export const AdminCreateDepartmentModal = ({ asChild, children }: Props) => {
+export const AdminCreatePermissionGroupModal = ({ asChild, children }: Props) => {
   const [open, setOpen] = useState(false)
 
   const form = useForm({
-    resolver: zodResolver(DepartmentSchema.create),
+    resolver: zodResolver(PermissionGroupSchema.create),
     defaultValues: {
-      name: "",
-      description: "",
+      groupName: "",
+      groupCode: "",
     },
   })
 
   const createMutation = useMutation({
-    mutationFn: ({ data }: Mutation) => createDepartmentAction(data),
+    mutationFn: ({ data }: Mutation) => createPermissionGroupAction(data),
     onSuccess: (data) =>
       showResponseMessage(data, () => {
         setOpen(false)
         form.reset()
       }),
   })
+
+  const handleGenerateGroupCode = () => {
+    if (!form.getValues().groupName) {
+      toast.error("Please enter a group name first.")
+      return
+    }
+    form.setValue(
+      "groupCode",
+      form.getValues().groupName.toLowerCase().replace(/\s/g, "_") +
+        "_permission_group_" +
+        Math.floor(Math.random() * 1000)
+    )
+  }
 
   const handleSubmit = () => {
     createMutation.mutate({ data: form.getValues() })
@@ -63,21 +77,27 @@ export const AdminCreateDepartmentModal = ({ asChild, children }: Props) => {
       <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Department</DialogTitle>
-          <DialogDescription>
-            Create Department information, It's assigned to current selected hospital
-          </DialogDescription>
+          <DialogTitle>Create Permission Group</DialogTitle>
+          <DialogDescription>Create Permission Group.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
-            <InputField name="name" label="Name" placeholder="Enter Name" control={form.control} />
             <InputField
-              name="description"
-              label="Description"
-              placeholder="Enter Description"
-              isTextarea
+              name="groupName"
+              label="Group Name"
+              placeholder="Group Name"
               control={form.control}
             />
+            <InputField
+              name="groupCode"
+              label="Group Code"
+              placeholder="Group Code"
+              control={form.control}
+            />
+            <Button type="button" variant="link" onClick={handleGenerateGroupCode}>
+              Generate code
+            </Button>
+
             <DialogFooter>
               <section className="flex gap-2">
                 <DialogClose asChild>

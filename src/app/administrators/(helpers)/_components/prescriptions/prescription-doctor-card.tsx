@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Doctor } from "@prisma/client"
 import { LinkBtn } from "@/components/common/link-btn"

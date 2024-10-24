@@ -14,7 +14,6 @@ import { SearchBox } from "@/components/common/search-box"
 import { ArrowRight, Loader2 } from "lucide-react"
 import { LinkBtn } from "@/components/common/link-btn"
 import { Label } from "@/components/ui/label"
-import { Form } from "@/components/ui/form"
 
 import { createPrescriptionAction } from "../../_actions/prescriptions"
 import { showResponseMessage } from "@/lib/utils"

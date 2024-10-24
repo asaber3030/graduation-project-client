@@ -1,6 +1,4 @@
 import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
-import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
-import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
 import { AdminDepartmentsTable } from "@/app/administrators/(helpers)/_components/departments/table"

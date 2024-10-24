@@ -1,26 +1,13 @@
 "use client"
 
-import { Doctor, Patient } from "@prisma/client"
+import { Doctor } from "@prisma/client"
 import { Button } from "@/components/ui/button"
-import {
-  Box,
-  Cog,
-  Eye,
-  LayoutPanelTop,
-  MoreHorizontal,
-  NotepadTextDashed,
-  Pickaxe,
-  Pill,
-  Syringe,
-  Trash,
-  Users,
-} from "lucide-react"
+import { Eye, MoreHorizontal, Trash } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 
 import { useRouter } from "next/navigation"

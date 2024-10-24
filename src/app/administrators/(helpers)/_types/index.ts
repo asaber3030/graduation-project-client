@@ -11,6 +11,9 @@ import {
   Inventory,
   Employee,
   DosageForm,
+  ResourcePermissionGroup,
+  ResourcePermission,
+  EmployeePermission,
 } from "@prisma/client"
 
 export type ATFullPrescritpion = Prescription & {
@@ -58,4 +61,19 @@ export type ATFullMedicine = Medicine & {
   hospital: Hospital
   dosageForm: DosageForm
   inventory: Inventory
+}
+
+export type ATFullPermissionGroup = ResourcePermissionGroup & {
+  permissions: ResourcePermission[]
+}
+
+export type ATFullPermission = ResourcePermission & {
+  _count: {
+    employeePermission: number
+  }
+}
+
+export type ATFullEmployeePermission = EmployeePermission & {
+  employee: Employee
+  permission: ResourcePermission
 }

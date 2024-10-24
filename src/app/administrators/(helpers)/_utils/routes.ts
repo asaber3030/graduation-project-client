@@ -20,6 +20,15 @@ export const adminRoutes = {
     view: (patientId: number) => `/administrators/admins/${patientId}`,
   },
 
+  permissions: {
+    root: "/administrators/permissions",
+    create: "/administrators/permissions/create",
+    update: (groupId: number) => `/administrators/permissions/${groupId}/update`,
+    view: (groupId: number) => `/administrators/permissions/${groupId}`,
+    viewPermission: (groupId: number, permissionId: number) =>
+      `/administrators/permissions/${groupId}/permissions/${permissionId}`,
+  },
+
   patients: {
     root: "/administrators/patients",
     create: "/administrators/patients/create",
@@ -32,6 +41,7 @@ export const adminRoutes = {
       `/administrators/patients/${patientId}/vaccinations`,
     patientInvoices: (patientId: number) => `/administrators/patients/${patientId}/invoices`,
   },
+
   doctors: {
     root: "/administrators/doctors",
     create: "/administrators/doctors/create",

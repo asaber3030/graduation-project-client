@@ -5,10 +5,7 @@ import { useEffect, useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
-import {
-  createPrescriptionItemAction,
-  updatePrescriptionItemAction,
-} from "../../_actions/prescriptions"
+import { updatePrescriptionItemAction } from "../../_actions/prescriptions"
 import { showResponseMessage } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { adminRoutes } from "../../_utils/routes"

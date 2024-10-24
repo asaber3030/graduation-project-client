@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import React from "react"
 
 import { useForm } from "react-hook-form"
@@ -10,7 +9,6 @@ import { useState } from "react"
 import { showResponseMessage } from "@/lib/utils"
 import { createAdminAction } from "../../_actions/admin"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { adminRoutes } from "../../_utils/routes"
 import { z } from "zod"
 
 import { LoadingButton } from "@/components/common/loading-button"

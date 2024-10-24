@@ -2,19 +2,7 @@
 
 import { Patient } from "@prisma/client"
 import { Button } from "@/components/ui/button"
-import {
-  Box,
-  Cog,
-  Eye,
-  LayoutPanelTop,
-  MoreHorizontal,
-  NotepadTextDashed,
-  Pickaxe,
-  Pill,
-  Syringe,
-  Trash,
-  Users,
-} from "lucide-react"
+import { Cog, Eye, MoreHorizontal, NotepadTextDashed, Pill, Syringe, Trash } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,

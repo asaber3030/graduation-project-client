@@ -324,3 +324,30 @@ export const MedicineSchema = {
       .optional(),
   }),
 }
+
+export const PermissionGroupSchema = {
+  create: z.object({
+    groupName: z.string().min(1, { message: "Group Name is required" }),
+    groupCode: z.string().min(1, { message: "Group Code is required" }),
+  }),
+  update: z.object({
+    groupName: z.string().min(1, { message: "Group Name is required" }).optional(),
+    groupCode: z.string().min(1, { message: "Group Code is required" }).optional(),
+  }),
+}
+export const PermissionSchema = {
+  create: z.object({
+    permissionName: z.string().min(1, { message: "Permission Name is required" }),
+    permissionCode: z.string().min(1, { message: "Permission Code is required" }),
+  }),
+  update: z.object({
+    permissionName: z.string().min(1, { message: "Permission Name is required" }).optional(),
+    permissionCode: z.string().min(1, { message: "Permission Code is required" }).optional(),
+  }),
+}
+
+export const EmployeePermissionSchema = {
+  quickAssign: z.object({
+    employeeEmail: z.string().email().min(1, { message: "Employee Email is required" }),
+  }),
+}

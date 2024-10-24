@@ -18,7 +18,7 @@ import {
 import { diffForHuman, showHospitalName } from "@/lib/utils"
 import { adminRoutes } from "../../_utils/routes"
 import { AdminInventoryActionsDropdown } from "./actions-dropdown"
-import { Delete, Trash } from "lucide-react"
+import { Trash } from "lucide-react"
 import { DeleteModal } from "../common/delete-modal"
 import { deleteInventoryAction } from "../../_actions/inventories"
 import { Button } from "@/components/ui/button"

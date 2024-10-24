@@ -8,8 +8,6 @@ export function useSearchMedicine(search?: string) {
     queryFn: ({ queryKey }) => searchMedicine(queryKey[2]),
   })
 
-  // Ranitidine
-
   return {
     medicine: query.data,
     isMedicineLoading: query.isLoading,

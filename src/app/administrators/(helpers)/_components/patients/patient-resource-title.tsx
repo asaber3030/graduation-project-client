@@ -1,6 +1,5 @@
 import Link from "next/link"
 
-import { Badge } from "@/components/ui/badge"
 import { Patient } from "@prisma/client"
 import { ChevronRight } from "lucide-react"
 

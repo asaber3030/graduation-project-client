@@ -2,16 +2,16 @@
 
 import db from "@/services/prisma"
 
-import { createPagination } from "@/lib/utils"
+import { actionResponse, responseCodes } from "@/lib/api"
 import { currentHospital, uploadFile } from "@/actions/app"
-import { SearchParams } from "@/types"
-import { MedicineSchema } from "@/schema"
-import { z } from "zod"
-
-import { v4 as uuid } from "uuid"
+import { createPagination } from "@/lib/utils"
 import { revalidatePath } from "next/cache"
 import { adminRoutes } from "../_utils/routes"
-import { actionResponse, responseCodes } from "@/lib/api"
+import { v4 as uuid } from "uuid"
+import { z } from "zod"
+
+import { MedicineSchema } from "@/schema"
+import { SearchParams } from "@/types"
 import { Prisma } from "@prisma/client"
 
 export async function findMedicine(record: Prisma.MedicineWhereUniqueInput) {
@@ -53,7 +53,6 @@ export async function searchMedicine(search?: string) {
     },
     take: 10,
   })
-
   return medicine
 }
 

@@ -3,13 +3,11 @@
 import Link from "next/link"
 import React from "react"
 
-import { useSearchDepartments } from "../../_hooks/useDepartment"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { useEffect } from "react"
 import { useState } from "react"
 
-import { createEmployeeAction } from "../../_actions/employees"
 import { showResponseMessage } from "@/lib/utils"
 import { adminRoutes } from "../../_utils/routes"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -20,11 +18,10 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { EmployeeSchema, MedicineSchema } from "@/schema"
+import { MedicineSchema } from "@/schema"
 import { FilterBySearch } from "@/components/common/filter-by-search"
 import { LoadingButton } from "@/components/common/loading-button"
 import { InputField } from "@/components/common/input-field"

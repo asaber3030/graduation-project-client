@@ -1,7 +1,4 @@
-import Link from "next/link"
 import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
-
-import Image from "next/image"
 
 import { SearchParams } from "@/types"
 import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
@@ -17,15 +14,8 @@ import {
 } from "@/components/ui/table"
 
 import { diffForHuman } from "@/lib/utils"
-import { userImagePlaceholder } from "@/lib/constants"
-
-import { AdminDoctorActionsDropdown } from "./doctor-actions-dropdown"
-import { ATFullDoctor } from "../../_types"
-import { adminRoutes } from "../../_utils/routes"
-import { LinkBtn } from "@/components/common/link-btn"
 import { DeleteModal } from "../common/delete-modal"
 import { Button } from "@/components/ui/button"
-import { deleteDoctorAction } from "../../_actions/doctors"
 import { Cog, Trash } from "lucide-react"
 import { Admin } from "@prisma/client"
 import { AdminUpdateAdminModal } from "./update-modal"

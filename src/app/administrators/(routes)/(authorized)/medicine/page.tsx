@@ -7,6 +7,7 @@ import { Plus } from "lucide-react"
 
 import { paginateMedicine } from "@/app/administrators/(helpers)/_actions/medicine"
 import { adminRoutes } from "@/app/administrators/(helpers)/_utils/routes"
+import { ATFullMedicine } from "@/app/administrators/(helpers)/_types"
 
 export default async function InventoriesPage({ searchParams }: { searchParams: SearchParams }) {
   const medicine = await paginateMedicine(searchParams)
@@ -20,7 +21,7 @@ export default async function InventoriesPage({ searchParams }: { searchParams: 
       </AdminPageTitle>
 
       <AdminMedicineTable
-        data={medicine.medicine}
+        data={medicine.medicine as ATFullMedicine[]}
         hasNextPage={medicine.hasNextPage}
         searchParams={searchParams}
       />

@@ -14,4 +14,18 @@ export const adminQueryKeys = {
   inventories: {
     search: (search?: string) => ["admin", "inventories", search],
   },
+  permissionGroups: {
+    find: (id: number) => ["admin", "permission-groups", id],
+    permissions: (id: number) => ["admin", "permission-groups", id, "permissions"],
+    findPermission: (id: number, permissionId: number) => [
+      "admin",
+      "permission-groups",
+      id,
+      "permissions",
+      permissionId,
+    ],
+  },
+  permissions: {
+    find: (id: number) => ["admin", "permissions", id],
+  },
 }

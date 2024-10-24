@@ -1,10 +1,10 @@
-import { findDoctor } from "@/app/administrators/(helpers)/_actions/doctors"
 import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
-import { AdminUpdateDoctorForm } from "@/app/administrators/(helpers)/_components/doctors/update-form"
-import { adminRoutes } from "@/app/administrators/(helpers)/_utils/routes"
-import { LinkBtn } from "@/components/common/link-btn"
-import { notFound } from "next/navigation"
 import React from "react"
+
+import { findDoctor } from "@/app/administrators/(helpers)/_actions/doctors"
+import { notFound } from "next/navigation"
+
+import { AdminUpdateDoctorForm } from "@/app/administrators/(helpers)/_components/doctors/update-form"
 
 type Props = {
   params: {

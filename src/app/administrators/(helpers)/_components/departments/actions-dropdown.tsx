@@ -4,13 +4,12 @@ import { useRouter } from "next/navigation"
 
 import { ATFullDepartment } from "../../_types"
 import { Button } from "@/components/ui/button"
-import { BoxIcon, BriefcaseMedical, MoreHorizontal, Paperclip, Pickaxe, Trash } from "lucide-react"
+import { BoxIcon, BriefcaseMedical, MoreHorizontal, Paperclip, Pickaxe } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { adminRoutes } from "../../_utils/routes"
 

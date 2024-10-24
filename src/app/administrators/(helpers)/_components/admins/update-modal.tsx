@@ -8,9 +8,8 @@ import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 
 import { showResponseMessage } from "@/lib/utils"
-import { createAdminAction, updateAdminAction } from "../../_actions/admin"
+import { updateAdminAction } from "../../_actions/admin"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { adminRoutes } from "../../_utils/routes"
 import { z } from "zod"
 
 import { LoadingButton } from "@/components/common/loading-button"

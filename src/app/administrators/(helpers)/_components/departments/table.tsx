@@ -2,11 +2,9 @@ import Link from "next/link"
 import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
 
 import { SearchParams } from "@/types"
-import { ATFullDepartment, ATFullPrescritpion } from "../../_types"
+import { ATFullDepartment } from "../../_types"
 import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
-import { LinkBtn } from "@/components/common/link-btn"
 import { OrderBy } from "../../_utils/order-by"
-import { Cog, Eye, Trash } from "lucide-react"
 import { EmptyState } from "@/components/common/empty-state"
 import {
   Table,

@@ -1,6 +1,5 @@
 import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
 
-import { Button } from "@/components/ui/button"
 import { SearchParams } from "@/types"
 import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
 import { EmptyState } from "@/components/common/empty-state"
