@@ -1,12 +1,22 @@
 import Link from "next/link"
 import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
-
 import Image from "next/image"
+
+import { diffForHuman } from "@/lib/utils"
+import { userImagePlaceholder } from "@/lib/constants"
+import { deleteDoctorAction } from "../../_actions/doctors"
+import { adminRoutes } from "../../_utils/routes"
 
 import { SearchParams } from "@/types"
 import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
 import { OrderBy } from "../../_utils/order-by"
 import { EmptyState } from "@/components/common/empty-state"
+import { AdminDoctorActionsDropdown } from "./doctor-actions-dropdown"
+import { ATFullDoctor } from "../../_types"
+import { LinkBtn } from "@/components/common/link-btn"
+import { DeleteModal } from "../common/delete-modal"
+import { Button } from "@/components/ui/button"
+import { Cog, Trash } from "lucide-react"
 import {
   Table,
   TableBody,
@@ -15,18 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-import { diffForHuman } from "@/lib/utils"
-import { userImagePlaceholder } from "@/lib/constants"
-
-import { AdminDoctorActionsDropdown } from "./doctor-actions-dropdown"
-import { ATFullDoctor } from "../../_types"
-import { adminRoutes } from "../../_utils/routes"
-import { LinkBtn } from "@/components/common/link-btn"
-import { DeleteModal } from "../common/delete-modal"
-import { Button } from "@/components/ui/button"
-import { deleteDoctorAction } from "../../_actions/doctors"
-import { Trash } from "lucide-react"
 
 type Props = {
   data: ATFullDoctor[]
@@ -53,7 +51,7 @@ export const AdminDoctorsTable = ({
       {data.length === 0 ? (
         <EmptyState />
       ) : (
-        <section>
+        <>
           <Table>
             <TableHeader>
               <TableRow>
@@ -91,7 +89,7 @@ export const AdminDoctorsTable = ({
                   <TableCell>{diffForHuman(doctor.updatedAt)}</TableCell>
 
                   <TableCell className="text-right space-x-2">
-                    <LinkBtn href={adminRoutes.doctors.update(doctor.id)} variant="blue">
+                    <LinkBtn href={adminRoutes.doctors.update(doctor.id)} icon={Cog} variant="blue">
                       Update
                     </LinkBtn>
                     <DeleteModal deletedId={doctor.id} forceAction={deleteDoctorAction}>
@@ -106,7 +104,7 @@ export const AdminDoctorsTable = ({
             </TableBody>
           </Table>
           <DefaultTableFooter searchParams={searchParams} hasNextPage={!hasNextPage} />
-        </section>
+        </>
       )}
     </>
   )

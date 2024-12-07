@@ -3,6 +3,7 @@
 import db from "@/services/prisma"
 
 import { createPagination } from "@/lib/utils"
+
 import { SearchParams } from "@/types"
 import { Prisma } from "@prisma/client"
 

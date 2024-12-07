@@ -1,11 +1,11 @@
-import React from "react"
 import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
+import React from "react"
 
-import { AdminCreatePrescriptionForm } from "@/app/administrators/(helpers)/_components/prescriptions/create-form"
-import { findPrescriptionById } from "@/app/administrators/(helpers)/_actions/prescriptions"
-import { notFound } from "next/navigation"
 import { AdminUpdatePrescriptionForm } from "@/app/administrators/(helpers)/_components/prescriptions/update-form"
 import { ATFullPrescritpion } from "@/app/administrators/(helpers)/_types"
+
+import { findPrescriptionById } from "@/app/administrators/(helpers)/_actions/prescriptions"
+import { notFound } from "next/navigation"
 
 type Props = {
   params: {

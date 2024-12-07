@@ -6,18 +6,19 @@ import { adminRoutes } from "../../../_utils/routes"
 import { useAppSelector } from "@/store"
 
 import { AdminNavbarUserDropdown } from "./user-dropdown"
-
-import Link from "next/link"
 import { AdminNavbarNotificationDropdown } from "./notifications-dropdown"
 import { AdminNavbarCreateDropdown } from "./create-dropdown"
 import { AdminNavbarSettingsDropdown } from "./settings-dropdown"
 
+import Link from "next/link"
+
 export const AdminNavbar = () => {
   const sidebarActive = useAppSelector((state) => state.adminSidebar)
+
   return (
     <div
       className={cn(
-        "w-full bg-white shadow-sm p-4 flex justify-between items-center",
+        "print:hidden w-full bg-white shadow-sm p-4 flex justify-between items-center",
         !sidebarActive && "pr-10",
         sidebarActive && "pr-10"
       )}

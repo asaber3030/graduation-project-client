@@ -8,12 +8,12 @@ import {
 import { getPermissionGroupById } from "@/app/administrators/(helpers)/_actions/permissions-groups"
 import { notFound } from "next/navigation"
 
+import { AdminQuickAssignPermissionToEmployeeModal } from "@/app/administrators/(helpers)/_components/permissions/quick-assign-permission-modal"
+import { AdminUpdatePermissionModal } from "@/app/administrators/(helpers)/_components/permissions/update-permission-modal"
 import { AdminPermissionEmployees } from "@/app/administrators/(helpers)/_components/permissions/permission-employees-table"
 import { SearchParams } from "@/types"
-import { AdminQuickAssignPermissionToEmployeeModal } from "@/app/administrators/(helpers)/_components/permissions/quick-assign-permission-modal"
-import { Button } from "@/components/ui/button"
 import { UserPlus } from "lucide-react"
-import { AdminUpdatePermissionModal } from "@/app/administrators/(helpers)/_components/permissions/update-permission-modal"
+import { Button } from "@/components/ui/button"
 
 type Props = {
   params: {

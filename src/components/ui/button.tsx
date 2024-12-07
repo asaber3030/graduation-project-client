@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { LucideIcon } from "lucide-react"
 
 const buttonVariants = cva(
-  "text-sm inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 transition-shadow focus:ring-2 focus:ring-blue-300",
+  "text-sm inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-md text-lg font-medium transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 transition-shadow focus:ring-2 focus:ring-main",
   {
     variants: {
       variant: {
@@ -24,18 +24,18 @@ const buttonVariants = cva(
         secondary:
           "border shadow-md bg-gray-100 text-secondary-foreground shadow-sm hover:bg-gray-200/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary underline-offset-4 hover:underline"
       },
       size: {
         default: "h-8 p-3 px-3 text-sm",
         lg: "h-9 px-4",
-        icon: "h-9 w-9",
-      },
+        icon: "h-9 w-9"
+      }
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
-    },
+      size: "default"
+    }
   }
 )
 

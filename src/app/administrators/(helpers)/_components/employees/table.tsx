@@ -1,8 +1,14 @@
 import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
+import Link from "next/link"
 
 import { SearchParams } from "@/types"
 import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
 import { EmptyState } from "@/components/common/empty-state"
+import { Button } from "@/components/ui/button"
+import { ATFullEmployee } from "../../_types"
+import { LinkBtn } from "@/components/common/link-btn"
+import { DeleteModal } from "../common/delete-modal"
+import { Cog, Eye, Trash } from "lucide-react"
 import {
   Table,
   TableBody,
@@ -13,16 +19,8 @@ import {
 } from "@/components/ui/table"
 
 import { diffForHuman, showHospitalName } from "@/lib/utils"
-
-import { Button } from "@/components/ui/button"
-import { Employee } from "@prisma/client"
-import Link from "next/link"
-import { adminRoutes } from "../../_utils/routes"
-import { ATFullEmployee } from "../../_types"
-import { LinkBtn } from "@/components/common/link-btn"
-import { DeleteModal } from "../common/delete-modal"
-import { Cog, Trash } from "lucide-react"
 import { deleteEmployeeAction } from "../../_actions/employees"
+import { adminRoutes } from "../../_utils/routes"
 
 type Props = {
   data: ATFullEmployee[]
@@ -93,12 +91,21 @@ export const AdminEmployeesTable = ({ hasNextPage, searchParams, data }: Props) 
 
                   <TableCell className="text-right space-x-2">
                     <LinkBtn
+                      href={adminRoutes.employees.view(employee.id)}
+                      variant="outline"
+                      icon={Eye}
+                    >
+                      View
+                    </LinkBtn>
+
+                    <LinkBtn
                       href={adminRoutes.employees.update(employee.id)}
                       variant="blue"
                       icon={Cog}
                     >
                       Update
                     </LinkBtn>
+
                     <DeleteModal deletedId={employee.id} forceAction={deleteEmployeeAction}>
                       <Button variant="destructive" icon={Trash}>
                         Delete

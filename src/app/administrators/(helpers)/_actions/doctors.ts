@@ -14,6 +14,15 @@ import { revalidatePath } from "next/cache"
 import { adminRoutes } from "../_utils/routes"
 import { z } from "zod"
 
+export async function getLimitDoctorLoginHistory(doctorId: number) {
+  const loginHistory = await db.doctorLoginHistory.findMany({
+    where: { doctorId },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  })
+  return loginHistory
+}
+
 export async function paginateDoctors(searchParams: SearchParams) {
   const hospital = await currentHospital()
   const total = await db.doctor.count({
@@ -27,6 +36,35 @@ export async function paginateDoctors(searchParams: SearchParams) {
         { username: { contains: searchParams.search ?? "" } },
       ],
       hospitalId: hospital.id,
+    },
+    include: { department: true, hospital: true },
+
+    ...pagination.args,
+  })
+
+  return {
+    doctors,
+    ...pagination,
+  }
+}
+
+export async function paginateDoctorsByDepartment(
+  searchParams: SearchParams,
+  departmentId: number
+) {
+  const hospital = await currentHospital()
+  const total = await db.doctor.count({
+    where: { hospitalId: hospital.id, departmentId },
+  })
+  const pagination = createPagination(searchParams, total)
+  const doctors = await db.doctor.findMany({
+    where: {
+      OR: [
+        { name: { contains: searchParams.search ?? "" } },
+        { username: { contains: searchParams.search ?? "" } },
+      ],
+      hospitalId: hospital.id,
+      departmentId,
     },
     include: { department: true, hospital: true },
 

@@ -13,13 +13,14 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { diffForHuman } from "@/lib/utils"
 import { DeleteModal } from "../common/delete-modal"
 import { Button } from "@/components/ui/button"
 import { Cog, Trash } from "lucide-react"
 import { Admin } from "@prisma/client"
 import { AdminUpdateAdminModal } from "./update-modal"
+
 import { deleteAdminAction } from "../../_actions/admin"
+import { diffForHuman } from "@/lib/utils"
 
 type Props = {
   data: Admin[]

@@ -1,12 +1,13 @@
+import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
+
 import { getPermissionsByGroupId } from "@/app/administrators/(helpers)/_actions/permissions"
 import { getPermissionGroupById } from "@/app/administrators/(helpers)/_actions/permissions-groups"
-import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
+import { notFound } from "next/navigation"
+
 import { AdminCreatePermissionModal } from "@/app/administrators/(helpers)/_components/permissions/create-permission-modal"
 import { AdminPermissionsTable } from "@/app/administrators/(helpers)/_components/permissions/permissions-table"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { notFound } from "next/navigation"
-import React from "react"
 
 type Props = {
   params: {

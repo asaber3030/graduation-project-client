@@ -1,8 +1,9 @@
 "use server"
 
-import db from "@/services/prisma"
 import bcrypt from "bcrypt"
+import db from "@/services/prisma"
 
+import { CreateNotificationEntry } from "../_types"
 import { Employee, Prisma } from "@prisma/client"
 import { EmployeeSchema } from "@/schema"
 import { SearchParams } from "@/types"
@@ -13,6 +14,15 @@ import { currentHospital } from "@/actions/app"
 import { revalidatePath } from "next/cache"
 import { adminRoutes } from "../_utils/routes"
 import { z } from "zod"
+
+export async function notifyEmployee(data: CreateNotificationEntry, employeeId: number) {
+  await db.employeeNotification.create({
+    data: {
+      ...data,
+      employeeId,
+    },
+  })
+}
 
 export async function findEmployee(record: Prisma.EmployeeWhereUniqueInput) {
   const employee = await db.employee.findUnique({
@@ -31,13 +41,185 @@ export async function findFirstEmployee(record: Prisma.EmployeeFindFirstArgs) {
   return rest as Employee
 }
 
-export async function paginateEmployees(searchParams: SearchParams) {
+export async function getEmployeePermissions(employeeId: number) {
+  const permissions = await db.resourcePermissionGroup.findMany({
+    include: {
+      permissions: {
+        include: {
+          employeePermission: {
+            where: { employeeId },
+          },
+        },
+      },
+    },
+  })
+  return permissions
+}
+
+export async function grantAllPermissionsToEmployee(employeeId: number) {
+  const permissions = await db.resourcePermission.findMany()
+  permissions.forEach(async (permission) => {
+    const hasThisPermission = await db.employeePermission.findFirst({
+      where: { employeeId, permissionId: permission.id },
+    })
+    if (!hasThisPermission) {
+      await db.employeePermission.create({
+        data: {
+          employeeId,
+          permissionId: permission.id,
+        },
+      })
+    }
+  })
+
+  revalidatePath(adminRoutes.employees.employeePermissions(employeeId))
+  return actionResponse(responseCodes.ok, "All Permissions granted successfully")
+}
+
+export async function removeAllPermissionsFromEmployee(employeeId: number) {
+  const permissions = await db.resourcePermission.findMany()
+  permissions.forEach(async (permission) => {
+    const hasThisPermission = await db.employeePermission.findFirst({
+      where: { employeeId, permissionId: permission.id },
+    })
+    if (hasThisPermission) {
+      await db.employeePermission.deleteMany({
+        where: {
+          employeeId,
+        },
+      })
+    }
+  })
+
+  revalidatePath(adminRoutes.employees.employeePermissions(employeeId))
+  return actionResponse(responseCodes.ok, "All Permissions Removed successfully")
+}
+
+export async function grantAllPermissionGroupToEmployee(employeeId: number, groupId: number) {
+  const permissions = await db.resourcePermission.findMany({
+    where: { groupId },
+  })
+  permissions.forEach(async (permission) => {
+    const hasThisPermission = await db.employeePermission.findFirst({
+      where: { employeeId, permissionId: permission.id },
+    })
+    if (!hasThisPermission) {
+      await db.employeePermission.create({
+        data: {
+          employeeId,
+          permissionId: permission.id,
+        },
+      })
+    }
+  })
+
+  revalidatePath(adminRoutes.employees.employeePermissions(employeeId))
+  return actionResponse(responseCodes.ok, "Permissions granted successfully")
+}
+
+export async function removeAllPermissionGroupFromEmployee(employeeId: number, groupId: number) {
+  const permissions = await db.resourcePermission.findMany({
+    where: { groupId },
+  })
+  permissions.forEach(async (permission) => {
+    const hasThisPermission = await db.employeePermission.findFirst({
+      where: { employeeId, permissionId: permission.id },
+    })
+    if (hasThisPermission) {
+      await db.employeePermission.deleteMany({
+        where: {
+          employeeId,
+          permissionId: permission.id,
+        },
+      })
+    }
+  })
+
+  revalidatePath(adminRoutes.employees.employeePermissions(employeeId))
+  return actionResponse(responseCodes.ok, "Permissions granted successfully")
+}
+
+export async function grantPermissionToEmployee(employeeId: number, permissionId: number) {
+  const hasThisPermission = await db.employeePermission.findFirst({
+    where: { employeeId, permissionId },
+  })
+  if (hasThisPermission) {
+    return actionResponse(responseCodes.ok, "This permission has been assigned already.")
+  }
+
+  await db.employeePermission.create({
+    data: {
+      employeeId,
+      permissionId,
+    },
+  })
+
+  revalidatePath(adminRoutes.employees.employeePermissions(employeeId))
+  return actionResponse(responseCodes.ok, "Permissions granted successfully")
+}
+
+export async function removePermissionFromEmployee(employeeId: number, permissionId: number) {
+  const hasThisPermission = await db.employeePermission.findFirst({
+    where: { employeeId, permissionId },
+  })
+  if (hasThisPermission) {
+    await db.employeePermission.deleteMany({
+      where: {
+        employeeId,
+        permissionId,
+      },
+    })
+    revalidatePath(adminRoutes.employees.employeePermissions(employeeId))
+    return actionResponse(responseCodes.ok, "Permissions removed successfully")
+  }
+
+  return actionResponse(
+    responseCodes.ok,
+    "This permission hasn't been assigned to selected employee."
+  )
+}
+
+export async function paginateEmployees(searchParams: SearchParams, hospitalId?: number) {
   const total = await db.employee.count()
   const pagination = createPagination(searchParams, total)
+
+  const where: Prisma.EmployeeWhereInput = {
+    OR: [{ name: { contains: searchParams.search ?? "" } }],
+  }
+
+  if (hospitalId) {
+    where.hospitalId = hospitalId
+  }
+
   const employees = await db.employee.findMany({
-    where: {
-      OR: [{ name: { contains: searchParams.search ?? "" } }],
+    where,
+    include: {
+      department: true,
+      hospital: true,
     },
+    ...pagination.args,
+  })
+
+  return {
+    employees,
+    ...pagination,
+  }
+}
+
+export async function paginateEmployeesByDepartment(
+  searchParams: SearchParams,
+  departmentId: number
+) {
+  const total = await db.employee.count()
+  const pagination = createPagination(searchParams, total)
+
+  const where: Prisma.EmployeeWhereInput = {
+    OR: [{ name: { contains: searchParams.search ?? "" } }],
+    departmentId,
+  }
+
+  const employees = await db.employee.findMany({
+    where,
     include: {
       department: true,
       hospital: true,

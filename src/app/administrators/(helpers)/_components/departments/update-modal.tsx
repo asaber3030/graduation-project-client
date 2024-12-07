@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
-import React, { useState } from "react"
+import { useState } from "react"
 
 import { showResponseMessage } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -10,9 +10,10 @@ import { updateDepartmentAction } from "../../_actions/departments"
 import { z } from "zod"
 
 import { DepartmentSchema } from "@/schema"
-import { Department } from "@prisma/client"
 import { LoadingButton } from "@/components/common/loading-button"
 import { InputField } from "@/components/common/input-field"
+import { Department } from "@prisma/client"
+import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import {
   Dialog,
@@ -24,7 +25,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 
 type Props = {
   department: Department

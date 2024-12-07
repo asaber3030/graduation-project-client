@@ -1,7 +1,8 @@
-import { getCurrentAdmin } from "@/app/administrators/(helpers)/_actions/auth"
 import { AdminLoginForm } from "@/app/administrators/(helpers)/_components/auth/login-form"
-import { adminRoutes } from "@/app/administrators/(helpers)/_utils/routes"
 import { Metadata } from "next"
+
+import { getCurrentAdmin } from "@/app/administrators/(helpers)/_actions/auth"
+import { adminRoutes } from "@/app/administrators/(helpers)/_utils/routes"
 import { redirect } from "next/navigation"
 
 export const metadata: Metadata = { title: "Admin Login" }

@@ -35,25 +35,27 @@ export const HospitalActionsDropdown = ({ hospital }: Props) => {
         <Button icon={MoreHorizontal} variant="outline" className="p-0 px-2" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(adminRoutes.hospitals.employees(hospital.id))}>
           <Pickaxe className="size-4" /> Employees
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => router.push(adminRoutes.hospitals.inventories(hospital.id))}
+        >
           <Box className="size-4" /> Inventories
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => router.push(adminRoutes.hospitals.departments(hospital.id))}
+        >
           <LayoutPanelTop className="size-4" /> Departments
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Users className="size-4" /> Patients
-        </DropdownMenuItem>
-        <DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={() => router.push(adminRoutes.hospitals.prescriptions(hospital.id))}
+        >
           <NotepadTextDashed className="size-4" /> Prescriptions
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Trash className="size-4" /> Delete
-        </DropdownMenuItem>
+
         <DropdownMenuItem onClick={() => router.push(adminRoutes.hospitals.update(hospital.id))}>
           <Cog className="size-4" /> Update
         </DropdownMenuItem>

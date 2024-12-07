@@ -9,7 +9,6 @@ import { notFound } from "next/navigation"
 
 import { PatientActionsDropdown } from "@/app/administrators/(helpers)/_components/patients/patient-actions-dropdown"
 import { PatientResourceBox } from "@/app/administrators/(helpers)/_components/patients/resource-box"
-import { Button } from "@/components/ui/button"
 import { PatientDetailsCard } from "@/app/administrators/(helpers)/_components/patients/patient-details-card"
 import { PatientNationalImageCard } from "@/app/administrators/(helpers)/_components/patients/patient-national-image-card"
 import { PatientBirthImageCard } from "@/app/administrators/(helpers)/_components/patients/patient-birth-image-card"

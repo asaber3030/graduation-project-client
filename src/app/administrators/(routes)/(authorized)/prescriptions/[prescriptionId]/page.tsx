@@ -2,20 +2,21 @@ import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/ti
 
 import { Plus } from "lucide-react"
 
-import {
-  findPrescriptionById,
-  findPrescriptionMedications,
-} from "@/app/administrators/(helpers)/_actions/prescriptions"
 import { notFound } from "next/navigation"
 import { AdminPrescriptionDoctorCard } from "@/app/administrators/(helpers)/_components/prescriptions/prescription-doctor-card"
 import { AdminPrescriptionPatientCard } from "@/app/administrators/(helpers)/_components/prescriptions/prescription-patient-card"
 import { AdminSinglePrescriptionItem } from "@/app/administrators/(helpers)/_components/prescriptions/single-prescription-item"
 import { EmptyState } from "@/components/common/empty-state"
-import { formatDate } from "@/lib/utils"
 import { AdminPrescriptionPrintButton } from "@/app/administrators/(helpers)/_components/prescriptions/prescription-print-button"
 import { AdminPrescriptionDetailsCard } from "@/app/administrators/(helpers)/_components/prescriptions/prescription-details-card"
 import { LinkBtn } from "@/components/common/link-btn"
+
+import {
+  findPrescriptionById,
+  findPrescriptionMedications,
+} from "@/app/administrators/(helpers)/_actions/prescriptions"
 import { adminRoutes } from "@/app/administrators/(helpers)/_utils/routes"
+import { formatDate } from "@/lib/utils"
 
 type Props = {
   params: {

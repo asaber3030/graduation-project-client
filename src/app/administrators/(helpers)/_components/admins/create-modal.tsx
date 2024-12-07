@@ -23,9 +23,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog"
-import { Hospital } from "@prisma/client"
 
 type Mutation = {
   data: z.infer<typeof AdminSchema.create>
@@ -39,7 +38,7 @@ export const AdminCreateAdminModal = ({ children }: Props) => {
   const [open, setOpen] = useState(false)
 
   const form = useForm({
-    resolver: zodResolver(AdminSchema.create),
+    resolver: zodResolver(AdminSchema.create)
   })
 
   const createMutation = useMutation({
@@ -48,12 +47,12 @@ export const AdminCreateAdminModal = ({ children }: Props) => {
       showResponseMessage(data, () => {
         form.reset()
         setOpen(false)
-      }),
+      })
   })
 
   const handleCreate = () => {
     createMutation.mutate({
-      data: form.getValues() as any,
+      data: form.getValues() as any
     })
   }
 

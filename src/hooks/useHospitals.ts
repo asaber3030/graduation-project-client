@@ -1,15 +1,15 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query";
 
-import { getHospital, getHospitals } from "@/actions/app"
-import { globalQueryKeys } from "@/lib/query-keys"
+import { getHospital, getHospitals } from "@/actions/app";
+import { globalQueryKeys } from "@/lib/query-keys";
 
-import { Prisma } from "@prisma/client"
+import { Prisma } from "@prisma/client";
 
 export function useHospitals(include?: Prisma.HospitalInclude) {
   const query = useQuery({
     queryKey: globalQueryKeys.hospitals(),
-    queryFn: () => getHospitals(include),
-  })
+    queryFn: () => getHospitals(),
+  });
 
   return {
     hospitals: query.data,
@@ -19,14 +19,14 @@ export function useHospitals(include?: Prisma.HospitalInclude) {
     isHospitalsFetching: query.isFetching,
     isHospitalsError: query.isError,
     refetchHospitals: query.refetch,
-  }
+  };
 }
 
-export function useHospital(hospitalId: number, include?: Prisma.HospitalInclude) {
+export function useHospital(hospitalId: number) {
   const query = useQuery({
     queryKey: globalQueryKeys.hospital(hospitalId),
-    queryFn: () => getHospital({ id: hospitalId }, include),
-  })
+    queryFn: () => getHospital({ id: hospitalId }),
+  });
 
   return {
     hospital: query.data,
@@ -36,5 +36,5 @@ export function useHospital(hospitalId: number, include?: Prisma.HospitalInclude
     isHospitalFetching: query.isFetching,
     isHospitalError: query.isError,
     refetchHospital: query.refetch,
-  }
+  };
 }

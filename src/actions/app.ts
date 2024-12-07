@@ -1,16 +1,16 @@
 "use server"
 
-import db from "@/services/prisma"
+import supabase from "@/services/supabase"
 import bcrypt from "bcrypt"
+import db from "@/services/prisma"
 
 import { ADMIN_COOKIE_HOSPITAL_ID } from "@/app/administrators/(helpers)/_utils/constants"
 import { Hospital, Prisma } from "@prisma/client"
 import { cookies } from "next/headers"
 import { actionResponse } from "@/lib/api"
-import supabase from "@/services/supabase"
 
 export async function uploadFile(file: File, bucketName: string, fileName: string) {
-  const { data, error } = await supabase.storage.from("main").upload(fileName, file, {
+  const { error } = await supabase.storage.from("main").upload(fileName, file, {
     cacheControl: "3600",
     upsert: false,
   })

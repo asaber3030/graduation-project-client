@@ -1,11 +1,13 @@
 "use server"
 
-import { getHeaders } from "@/lib/api"
-import { apiURL } from "@/lib/constants"
+import { ADMIN_COOKIE_NAME } from "../_utils/constants"
+
 import { APIResponse } from "@/types"
 import { Admin } from "@prisma/client"
+
+import { getHeaders } from "@/lib/api"
 import { cookies } from "next/headers"
-import { ADMIN_COOKIE_NAME } from "../_utils/constants"
+import { apiURL } from "@/lib/constants"
 
 type GetAdminResponseType = {
   admin: Admin

@@ -2,11 +2,11 @@
 
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
-import React, { useState } from "react"
+import { useState } from "react"
 
+import { createDepartmentAction } from "../../_actions/departments"
 import { showResponseMessage } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createDepartmentAction } from "../../_actions/departments"
 import { z } from "zod"
 
 import { DepartmentSchema } from "@/schema"

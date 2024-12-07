@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 
 import { ATFullDepartment } from "../../_types"
 import { Button } from "@/components/ui/button"
-import { BoxIcon, BriefcaseMedical, MoreHorizontal, Paperclip, Pickaxe } from "lucide-react"
+import { BoxIcon, BriefcaseMedical, MoreHorizontal, Pickaxe } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,22 +31,17 @@ export const AdminDepartmentActionsDropdown = ({ department }: Props) => {
         >
           <BoxIcon className="size-4" /> Inventories
         </DropdownMenuItem>
+
         <DropdownMenuItem
           onClick={() => router.push(adminRoutes.departments.departmentDoctors(department.id))}
         >
           <BriefcaseMedical className="size-4" /> Doctors
         </DropdownMenuItem>
+
         <DropdownMenuItem
           onClick={() => router.push(adminRoutes.departments.departmentEmployees(department.id))}
         >
           <Pickaxe className="size-4" /> Employees
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() =>
-            router.push(adminRoutes.departments.departmentExaminationForms(department.id))
-          }
-        >
-          <Paperclip className="size-4" /> Examination Forms
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

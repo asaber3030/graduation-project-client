@@ -3,10 +3,12 @@ import FilterAll from "@/app/administrators/(helpers)/_components/common/filter"
 import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
-import { Cog, Plus, Trash } from "lucide-react"
+import { Plus } from "lucide-react"
 import { SearchParams } from "@/types"
 import { DefaultTableFooter } from "@/app/administrators/(helpers)/_components/common/table-footer"
 import { paginateHospitals } from "@/app/administrators/(helpers)/_actions/hospitals"
+import { HospitalActionsDropdown } from "@/app/administrators/(helpers)/_components/hospitals/hospital-actions-dropdown"
+import { EmptyState } from "@/components/common/empty-state"
 import {
   Table,
   TableBody,
@@ -17,8 +19,6 @@ import {
 } from "@/components/ui/table"
 
 import { diffForHuman } from "@/lib/utils"
-import { HospitalActionsDropdown } from "@/app/administrators/(helpers)/_components/hospitals/hospital-actions-dropdown"
-import { EmptyState } from "@/components/common/empty-state"
 
 export default async function Hospitals({ searchParams }: { searchParams: SearchParams }) {
   const hospitals = await paginateHospitals(searchParams)

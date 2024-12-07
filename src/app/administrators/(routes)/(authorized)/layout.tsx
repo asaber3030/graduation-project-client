@@ -5,13 +5,10 @@ import { AdminProvider } from "../../(helpers)/_providers/admin-provider"
 import { AdminSidebar } from "../../(helpers)/_components/common/sidebar/sidebar"
 import { AdminNavbar } from "../../(helpers)/_components/common/navbar/navbar"
 
-import { ADMIN_COOKIE_HOSPITAL_ID } from "../../(helpers)/_utils/constants"
-
 import { getCurrentAdmin } from "../../(helpers)/_actions/auth"
-import { currentHospital, getCurrentHospital } from "@/actions/app"
+import { currentHospital } from "@/actions/app"
 import { adminRoutes } from "../../(helpers)/_utils/routes"
 import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
 
 export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
   const admin = await getCurrentAdmin()

@@ -2,30 +2,75 @@
 
 import db from "@/services/prisma"
 
-import { createPagination } from "@/lib/utils"
-import { SearchParams } from "@/types"
-import { currentHospital } from "@/actions/app"
 import { Prisma } from "@prisma/client"
-import { PrescriptionItemSchema, PrescriptionSchema } from "@/schema"
+import { PrescriptionItemSchema } from "@/schema"
+import { SearchParams } from "@/types"
+
+import { createPagination } from "@/lib/utils"
+import { currentHospital } from "@/actions/app"
 import { actionResponse } from "@/lib/api"
-import { z } from "zod"
 import { revalidatePath } from "next/cache"
 import { adminRoutes } from "../_utils/routes"
+import { z } from "zod"
 
-export async function paginatePrescriptions(searchParams: SearchParams, patientId?: number) {
-  const hospital = await currentHospital()
+export async function paginatePrescriptions(
+  searchParams: SearchParams,
+  patientId?: number,
+  hospitalId?: number
+) {
+  let hospital = await currentHospital()
+  let specificId = hospital.id
+
+  if (hospitalId) specificId = hospitalId
+
   const where: Prisma.PrescriptionWhereInput = {
-    hospitalId: hospital.id,
+    hospitalId: specificId,
   }
-  if (patientId) {
-    where.patientId = patientId
-  }
+  if (patientId) where.patientId = patientId
+
   const total = await db.prescription.count({
     where,
   })
   const pagination = createPagination(searchParams, total)
 
   where.OR = [{ patient: { name: { contains: searchParams.search ?? "" } } }]
+
+  const prescriptions = await db.prescription.findMany({
+    where,
+    include: {
+      patient: true,
+      doctor: true,
+      hospital: true,
+      _count: {
+        select: { items: true },
+      },
+    },
+    ...pagination.args,
+  })
+
+  return {
+    prescriptions,
+    ...pagination,
+  }
+}
+
+export async function paginatePrescriptionsByDoctorId(
+  searchParams: SearchParams,
+  doctorId: number
+) {
+  const where: Prisma.PrescriptionWhereInput = {
+    doctorId,
+  }
+
+  const total = await db.prescription.count({
+    where,
+  })
+  const pagination = createPagination(searchParams, total)
+
+  where.OR = [
+    { patient: { name: { contains: searchParams.search ?? "" } } },
+    { doctor: { name: { contains: searchParams.search ?? "" } } },
+  ]
 
   const prescriptions = await db.prescription.findMany({
     where,

@@ -72,6 +72,9 @@ export const AdminMedicineTable = ({ hasNextPage, searchParams, data }: Props) =
                     <LinkBtn href={adminRoutes.medicine.update(medicine.id)} variant="blue">
                       Update
                     </LinkBtn>
+                    <LinkBtn href={adminRoutes.medicine.view(medicine.id)} variant="outline">
+                      View
+                    </LinkBtn>
                   </TableCell>
                 </TableRow>
               ))}

@@ -2,15 +2,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_HOST")
+// }
+
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_HOST")
 }
-
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_LOCALHOST")
-// }
 
 enum Gender {
   Male
@@ -185,6 +185,9 @@ model Admin {
   hospitalId  Int
   hospital    Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
+  logs AdminLog[]
+  notifications AdminNotification[]
+
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @db.Timestamp()
 
@@ -208,6 +211,7 @@ model Doctor {
 
   username     String @unique
   name         String
+  image       String @default("/defaults/icons/user-svg.svg")
   jobTitle     String
   password     String
   phoneNumber  String @unique
@@ -218,11 +222,26 @@ model Doctor {
   hospital     Hospital       @relation(fields: [hospitalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   department   Department     @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   presepctions Prescription[]
+  loginHistory DoctorLoginHistory[]
 
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @db.Timestamp()
 
   @@map("doctors")
+}
+
+model DoctorLoginHistory {
+  id        Int     @id @default(autoincrement())
+  os        String   @default("/defaults/os/windows.svg")
+  browser   String   @default("Chrome")
+  device    String
+  ip        String
+  doctorId  Int
+  createdAt DateTime @default(now()) @db.Timestamp()
+
+  doctor Doctor @relation(fields: [doctorId], references: [id])
+
+  @@map("doctors_login_history")
 }
 
 model Department {
@@ -333,6 +352,8 @@ model Employee {
   email       String @unique
   password    String
   jobTitle    String
+  image       String @default("/defaults/icons/user-svg.svg")
+  status      Boolean @default(true)
 
   hospitalId   Int
   departmentId Int
@@ -340,6 +361,8 @@ model Employee {
   hospital   Hospital   @relation(fields: [hospitalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   department Department @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   permission EmployeePermission[]
+  logs       EmployeeLog[]
+  notifications EmployeeNotification[]
 
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @db.Timestamp()
@@ -366,4 +389,52 @@ model ExaminationForm {
   updatedAt DateTime @default(now()) @db.Timestamp()
 
   @@map("examination_forms")
+}
+
+model AdminNotification {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  url         String?
+  adminId     Int
+  createdAt DateTime @default(now()) @db.Timestamp()
+
+  admin     Admin @relation(fields: [adminId], references: [id])
+
+  @@map("admins_notification")
+}
+
+model AdminLog {
+  id        Int     @id @default(autoincrement())
+  adminId   Int
+  action    String
+  type String? @default("/defaults/icons/empty.svg")
+  createdAt DateTime @default(now()) @db.Timestamp()
+  admin Admin @relation(fields: [adminId], references: [id])
+
+  @@map("admins_logs")
+}
+
+model EmployeeLog {
+  id        Int     @id @default(autoincrement())
+  employeeId   Int
+  action    String
+  type String? @default("/defaults/icons/empty.svg")
+  createdAt DateTime @default(now()) @db.Timestamp()
+  employee Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("employees_logs")
+}
+
+model EmployeeNotification {
+  id        Int     @id @default(autoincrement())
+  employeeId   Int
+  title    String
+  description String?
+  url String?
+
+  createdAt DateTime @default(now()) @db.Timestamp()
+  employee Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("employees_notification")
 }

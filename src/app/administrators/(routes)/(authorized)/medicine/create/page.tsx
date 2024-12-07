@@ -1,8 +1,8 @@
-import { getHospitals } from "@/actions/app"
 import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
-import { AdminCreateMedicineForm } from "@/app/administrators/(helpers)/_components/medicine/create-form"
 import db from "@/services/prisma"
-import React from "react"
+
+import { AdminCreateMedicineForm } from "@/app/administrators/(helpers)/_components/medicine/create-form"
+import { getHospitals } from "@/actions/app"
 
 export default async function CreateMedicinePage() {
   const hospitals = await getHospitals()

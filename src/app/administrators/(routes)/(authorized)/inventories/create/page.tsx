@@ -6,7 +6,6 @@ export default async function CreateInventoryPage() {
   return (
     <div>
       <AdminPageTitle title="Create Inventory" />
-
       <AdminCreateInventtoryModal />
     </div>
   )

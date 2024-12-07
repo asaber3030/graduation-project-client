@@ -2,8 +2,8 @@
 
 import db from "@/services/prisma"
 
-import { SearchParams } from "@/types"
 import { DepartmentSchema } from "@/schema"
+import { SearchParams } from "@/types"
 
 import { createPagination } from "@/lib/utils"
 import { currentHospital } from "@/actions/app"
@@ -12,29 +12,33 @@ import { actionResponse } from "@/lib/api"
 import { adminRoutes } from "../_utils/routes"
 import { z } from "zod"
 
-export async function paginateDepartments(searchParams: SearchParams) {
-  const hospital = await currentHospital()
+export async function paginateDepartments(searchParams: SearchParams, hospitalId?: number) {
+  let hospital = await currentHospital()
+  let specificId = hospital.id
+
+  if (hospitalId) specificId = hospitalId
+
   const total = await db.department.count({
-    where: { hospitalId: hospital.id },
+    where: { hospitalId: specificId }
   })
   const pagination = createPagination(searchParams, total)
   const departments = await db.department.findMany({
     where: {
       OR: [
         { name: { contains: searchParams.search ?? "" } },
-        { hospital: { name: { contains: searchParams.search ?? "" } } },
+        { hospital: { name: { contains: searchParams.search ?? "" } } }
       ],
-      hospitalId: hospital.id,
+      hospitalId: specificId
     },
     include: {
-      hospital: true,
+      hospital: true
     },
-    ...pagination.args,
+    ...pagination.args
   })
 
   return {
     departments,
-    ...pagination,
+    ...pagination
   }
 }
 
@@ -42,8 +46,8 @@ export async function getDepartmentById(id: number) {
   return db.department.findUnique({
     where: { id },
     include: {
-      hospital: true,
-    },
+      hospital: true
+    }
   })
 }
 
@@ -52,16 +56,16 @@ export async function createDepartmentAction(data: any) {
   const findFirstDepartment = await db.department.findFirst({
     where: {
       name: data.name,
-      hospitalId: hospital.id,
-    },
+      hospitalId: hospital.id
+    }
   })
   if (findFirstDepartment) return actionResponse(404, "Department already exists")
 
   await db.department.create({
     data: {
       ...data,
-      hospitalId: hospital.id,
-    },
+      hospitalId: hospital.id
+    }
   })
   revalidatePath(adminRoutes.departments.root)
   return actionResponse(200, "Department created successfully")
@@ -73,7 +77,7 @@ export async function updateDepartmentAction(
 ) {
   await db.department.update({
     where: { id },
-    data,
+    data
   })
   revalidatePath(adminRoutes.departments.root)
   revalidatePath(adminRoutes.departments.view(id))
@@ -87,12 +91,13 @@ export async function deleteDepartmentAction(id: number) {
 }
 
 export async function searchDepartments(search?: string) {
+  const hospital = await currentHospital()
   const departments = await db.department.findMany({
     where: {
       OR: [{ name: { contains: search } }],
-      hospitalId: (await currentHospital()).id,
+      hospitalId: hospital.id
     },
-    take: 10,
+    take: 10
   })
   return departments
 }

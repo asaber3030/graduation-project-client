@@ -77,3 +77,9 @@ export type ATFullEmployeePermission = EmployeePermission & {
   employee: Employee
   permission: ResourcePermission
 }
+
+export type CreateNotificationEntry = {
+  title: string
+  description?: string
+  url?: string
+}

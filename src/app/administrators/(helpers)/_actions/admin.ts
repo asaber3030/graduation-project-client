@@ -7,12 +7,14 @@ import { actionResponse, responseCodes } from "@/lib/api"
 import { createPagination } from "@/lib/utils"
 import { revalidatePath } from "next/cache"
 import { adminRoutes } from "../_utils/routes"
+import { currentHospital } from "@/actions/app"
+import { getCurrentAdmin } from "./auth"
 import { z } from "zod"
 
+import { CreateNotificationEntry } from "../_types"
+import { SearchParams } from "@/types"
 import { AdminSchema } from "@/schema"
 import { Prisma } from "@prisma/client"
-import { SearchParams } from "@/types"
-import { currentHospital } from "@/actions/app"
 
 export async function findAdmin(record: Prisma.AdminWhereUniqueInput) {
   return await db.admin.findUnique({
@@ -96,4 +98,28 @@ export async function deleteAdminAction(id: number) {
   })
   revalidatePath(adminRoutes.admins.root)
   return actionResponse(responseCodes.ok, "Admin deleted successfully")
+}
+
+export async function saveAdminLog(action: string, type?: string) {
+  const admin = await getCurrentAdmin()
+  await db.adminLog.create({
+    data: {
+      action,
+      type,
+      adminId: admin.id,
+    },
+  })
+}
+
+export async function notifyAdmin(data: CreateNotificationEntry, adminId?: number) {
+  if (!adminId) {
+    const admin = await getCurrentAdmin()
+    adminId = admin.id
+  }
+  await db.adminNotification.create({
+    data: {
+      ...data,
+      adminId,
+    },
+  })
 }

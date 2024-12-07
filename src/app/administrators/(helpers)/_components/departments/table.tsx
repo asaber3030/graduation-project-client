@@ -15,13 +15,14 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { diffForHuman, showHospitalName } from "@/lib/utils"
-import { adminRoutes } from "../../_utils/routes"
 import { Button } from "@/components/ui/button"
 import { AdminDepartmentActionsDropdown } from "./actions-dropdown"
 import { AdminUpdateDepartmentModal } from "./update-modal"
 import { DeleteModal } from "../common/delete-modal"
+
+import { diffForHuman, showHospitalName } from "@/lib/utils"
 import { deleteDepartmentAction } from "../../_actions/departments"
+import { adminRoutes } from "../../_utils/routes"
 
 type Props = {
   data: ATFullDepartment[]

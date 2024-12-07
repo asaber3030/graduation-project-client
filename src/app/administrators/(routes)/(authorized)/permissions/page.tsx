@@ -1,13 +1,13 @@
 import React from "react"
 import AdminPageTitle from "@/app/administrators/(helpers)/_components/common/title"
 
+import db from "@/services/prisma"
+
 import { AdminCreatePermissionGroupModal } from "@/app/administrators/(helpers)/_components/permissions/create-permission-group-modal"
 import { PermissionGroupContainer } from "@/app/administrators/(helpers)/_components/permissions/permission-group-container"
 import { EmptyState } from "@/components/common/empty-state"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-
-import db from "@/services/prisma"
 
 export default async function PermissionsPage() {
   const permissionGroups = await db.resourcePermissionGroup.findMany({

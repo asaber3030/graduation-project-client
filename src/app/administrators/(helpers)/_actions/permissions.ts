@@ -3,13 +3,13 @@
 import db from "@/services/prisma"
 
 import { EmployeePermissionSchema, PermissionSchema } from "@/schema"
+import { SearchParams } from "@/types"
 
+import { createPagination } from "@/lib/utils"
 import { revalidatePath } from "next/cache"
 import { actionResponse } from "@/lib/api"
 import { adminRoutes } from "../_utils/routes"
 import { z } from "zod"
-import { SearchParams } from "@/types"
-import { createPagination } from "@/lib/utils"
 
 export async function getPermissionsByGroupId(groupId: number) {
   return db.resourcePermission.findMany({

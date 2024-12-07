@@ -11,7 +11,6 @@ import { createPagination } from "@/lib/utils"
 import { revalidatePath } from "next/cache"
 import { adminRoutes } from "../_utils/routes"
 import { uploadFile } from "@/actions/app"
-
 import { v4 as uuid } from "uuid"
 
 export async function paginateHospitals(searchParams: SearchParams) {

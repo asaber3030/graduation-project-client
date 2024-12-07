@@ -2,28 +2,67 @@
 
 import db from "@/services/prisma"
 
+import { SearchParams } from "@/types"
+import { InventorySchema } from "@/schema"
+
 import { createPagination } from "@/lib/utils"
 import { currentHospital } from "@/actions/app"
-import { SearchParams } from "@/types"
-import { z } from "zod"
-import { InventorySchema } from "@/schema"
 import { actionResponse } from "@/lib/api"
 import { revalidatePath } from "next/cache"
 import { adminRoutes } from "../_utils/routes"
+import { z } from "zod"
 
-export async function paginateInventories(searchParams: SearchParams) {
-  const hospital = await currentHospital()
+export async function paginateInventories(searchParams: SearchParams, hospitalId?: number) {
+  let hospital = await currentHospital()
+  let specificId = hospital.id
+
+  if (hospitalId) specificId = hospitalId
+
   const total = await db.inventory.count({
-    where: { hospitalId: hospital.id },
+    where: { hospitalId: specificId },
   })
+
   const pagination = createPagination(searchParams, total)
+
   const inventories = await db.inventory.findMany({
     where: {
       OR: [
         { name: { contains: searchParams.search ?? "" } },
         { code: { contains: searchParams.search ?? "" } },
       ],
-      hospitalId: hospital.id,
+      hospitalId: specificId,
+    },
+    include: { department: true, hospital: true },
+    ...pagination.args,
+  })
+
+  return {
+    inventories,
+    ...pagination,
+  }
+}
+
+export async function paginateInventoriesByDepartmentId(
+  searchParams: SearchParams,
+  departmentId: number
+) {
+  let hospital = await currentHospital()
+  let specificId = hospital.id
+
+  const total = await db.inventory.count({
+    where: { hospitalId: specificId, departmentId },
+  })
+
+  const pagination = createPagination(searchParams, total)
+
+  const inventories = await db.inventory.findMany({
+    where: {
+      OR: [
+        { name: { contains: searchParams.search ?? "" } },
+        { code: { contains: searchParams.search ?? "" } },
+      ],
+      hospitalId: specificId,
+      departmentId,
     },
     include: { department: true, hospital: true },
     ...pagination.args,

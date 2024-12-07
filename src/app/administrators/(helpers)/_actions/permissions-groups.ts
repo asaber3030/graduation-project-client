@@ -15,6 +15,15 @@ export async function getPermissionGroups() {
   })
 }
 
+export async function getPermissionGroupsWithPermissions() {
+  return db.resourcePermissionGroup.findMany({
+    include: {
+      permissions: true,
+    },
+    orderBy: { id: "desc" },
+  })
+}
+
 export async function getPermissionGroupById(id: number) {
   return db.resourcePermissionGroup.findUnique({
     where: { id },
