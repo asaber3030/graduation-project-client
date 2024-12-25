@@ -14,24 +14,23 @@ import { currentHospital } from "@/actions/app"
 import { revalidatePath } from "next/cache"
 import { adminRoutes } from "../_utils/routes"
 import { z } from "zod"
+import { getCurrentEmployee } from "@/app/employees/(helpers)/_actions/auth"
 
 export async function notifyEmployee(data: CreateNotificationEntry, employeeId: number) {
   await db.employeeNotification.create({
     data: {
       ...data,
-      employeeId,
-    },
+      employeeId
+    }
   })
 }
 
 export async function findEmployee(record: Prisma.EmployeeWhereUniqueInput) {
   const employee = await db.employee.findUnique({
     where: record,
-    include: { hospital: true, department: true },
+    include: { hospital: true, department: true }
   })
-  if (!employee) return null
-  const { password, ...rest } = employee
-  return rest
+  return employee
 }
 
 export async function findFirstEmployee(record: Prisma.EmployeeFindFirstArgs) {
@@ -47,11 +46,26 @@ export async function getEmployeePermissions(employeeId: number) {
       permissions: {
         include: {
           employeePermission: {
-            where: { employeeId },
-          },
-        },
-      },
-    },
+            where: { employeeId }
+          }
+        }
+      }
+    }
+  })
+  return permissions
+}
+
+export async function getCurrentEmployeePermissions() {
+  const employee = await getCurrentEmployee()
+  const permissions = await db.employeePermission.findMany({
+    where: { employeeId: employee?.id },
+    include: {
+      permission: {
+        include: {
+          group: true
+        }
+      }
+    }
   })
   return permissions
 }
@@ -60,14 +74,14 @@ export async function grantAllPermissionsToEmployee(employeeId: number) {
   const permissions = await db.resourcePermission.findMany()
   permissions.forEach(async (permission) => {
     const hasThisPermission = await db.employeePermission.findFirst({
-      where: { employeeId, permissionId: permission.id },
+      where: { employeeId, permissionId: permission.id }
     })
     if (!hasThisPermission) {
       await db.employeePermission.create({
         data: {
           employeeId,
-          permissionId: permission.id,
-        },
+          permissionId: permission.id
+        }
       })
     }
   })
@@ -80,13 +94,13 @@ export async function removeAllPermissionsFromEmployee(employeeId: number) {
   const permissions = await db.resourcePermission.findMany()
   permissions.forEach(async (permission) => {
     const hasThisPermission = await db.employeePermission.findFirst({
-      where: { employeeId, permissionId: permission.id },
+      where: { employeeId, permissionId: permission.id }
     })
     if (hasThisPermission) {
       await db.employeePermission.deleteMany({
         where: {
-          employeeId,
-        },
+          employeeId
+        }
       })
     }
   })
@@ -97,18 +111,18 @@ export async function removeAllPermissionsFromEmployee(employeeId: number) {
 
 export async function grantAllPermissionGroupToEmployee(employeeId: number, groupId: number) {
   const permissions = await db.resourcePermission.findMany({
-    where: { groupId },
+    where: { groupId }
   })
   permissions.forEach(async (permission) => {
     const hasThisPermission = await db.employeePermission.findFirst({
-      where: { employeeId, permissionId: permission.id },
+      where: { employeeId, permissionId: permission.id }
     })
     if (!hasThisPermission) {
       await db.employeePermission.create({
         data: {
           employeeId,
-          permissionId: permission.id,
-        },
+          permissionId: permission.id
+        }
       })
     }
   })
@@ -119,18 +133,18 @@ export async function grantAllPermissionGroupToEmployee(employeeId: number, grou
 
 export async function removeAllPermissionGroupFromEmployee(employeeId: number, groupId: number) {
   const permissions = await db.resourcePermission.findMany({
-    where: { groupId },
+    where: { groupId }
   })
   permissions.forEach(async (permission) => {
     const hasThisPermission = await db.employeePermission.findFirst({
-      where: { employeeId, permissionId: permission.id },
+      where: { employeeId, permissionId: permission.id }
     })
     if (hasThisPermission) {
       await db.employeePermission.deleteMany({
         where: {
           employeeId,
-          permissionId: permission.id,
-        },
+          permissionId: permission.id
+        }
       })
     }
   })
@@ -141,7 +155,7 @@ export async function removeAllPermissionGroupFromEmployee(employeeId: number, g
 
 export async function grantPermissionToEmployee(employeeId: number, permissionId: number) {
   const hasThisPermission = await db.employeePermission.findFirst({
-    where: { employeeId, permissionId },
+    where: { employeeId, permissionId }
   })
   if (hasThisPermission) {
     return actionResponse(responseCodes.ok, "This permission has been assigned already.")
@@ -150,8 +164,8 @@ export async function grantPermissionToEmployee(employeeId: number, permissionId
   await db.employeePermission.create({
     data: {
       employeeId,
-      permissionId,
-    },
+      permissionId
+    }
   })
 
   revalidatePath(adminRoutes.employees.employeePermissions(employeeId))
@@ -160,14 +174,14 @@ export async function grantPermissionToEmployee(employeeId: number, permissionId
 
 export async function removePermissionFromEmployee(employeeId: number, permissionId: number) {
   const hasThisPermission = await db.employeePermission.findFirst({
-    where: { employeeId, permissionId },
+    where: { employeeId, permissionId }
   })
   if (hasThisPermission) {
     await db.employeePermission.deleteMany({
       where: {
         employeeId,
-        permissionId,
-      },
+        permissionId
+      }
     })
     revalidatePath(adminRoutes.employees.employeePermissions(employeeId))
     return actionResponse(responseCodes.ok, "Permissions removed successfully")
@@ -184,7 +198,7 @@ export async function paginateEmployees(searchParams: SearchParams, hospitalId?:
   const pagination = createPagination(searchParams, total)
 
   const where: Prisma.EmployeeWhereInput = {
-    OR: [{ name: { contains: searchParams.search ?? "" } }],
+    OR: [{ name: { contains: searchParams.search ?? "" } }]
   }
 
   if (hospitalId) {
@@ -195,14 +209,14 @@ export async function paginateEmployees(searchParams: SearchParams, hospitalId?:
     where,
     include: {
       department: true,
-      hospital: true,
+      hospital: true
     },
-    ...pagination.args,
+    ...pagination.args
   })
 
   return {
     employees,
-    ...pagination,
+    ...pagination
   }
 }
 
@@ -215,21 +229,21 @@ export async function paginateEmployeesByDepartment(
 
   const where: Prisma.EmployeeWhereInput = {
     OR: [{ name: { contains: searchParams.search ?? "" } }],
-    departmentId,
+    departmentId
   }
 
   const employees = await db.employee.findMany({
     where,
     include: {
       department: true,
-      hospital: true,
+      hospital: true
     },
-    ...pagination.args,
+    ...pagination.args
   })
 
   return {
     employees,
-    ...pagination,
+    ...pagination
   }
 }
 
@@ -242,8 +256,8 @@ export async function updateEmployeeAction(
     const emailExists = await findFirstEmployee({
       where: {
         email: data.email,
-        id: { not: id },
-      },
+        id: { not: id }
+      }
     })
     if (emailExists) return actionResponse(responseCodes.badRequest, "Email already exists")
   }
@@ -252,8 +266,8 @@ export async function updateEmployeeAction(
     const phoneExists = await findFirstEmployee({
       where: {
         phoneNumber: data.phoneNumber,
-        id: { not: id },
-      },
+        id: { not: id }
+      }
     })
     if (phoneExists) return actionResponse(responseCodes.badRequest, "Phone Number already exists")
   }
@@ -262,8 +276,8 @@ export async function updateEmployeeAction(
     const usernameExists = await findFirstEmployee({
       where: {
         username: data.username,
-        id: { not: id },
-      },
+        id: { not: id }
+      }
     })
     if (usernameExists) return actionResponse(responseCodes.badRequest, "Username already exists")
   }
@@ -272,8 +286,8 @@ export async function updateEmployeeAction(
     where: { id },
     data: {
       ...data,
-      departmentId,
-    },
+      departmentId
+    }
   })
 
   revalidatePath(adminRoutes.employees.root)
@@ -300,8 +314,8 @@ export async function createEmployeeAction(
       ...data,
       departmentId,
       hospitalId: hospital.id,
-      password: hashedPassword,
-    },
+      password: hashedPassword
+    }
   })
 
   revalidatePath(adminRoutes.employees.root)
@@ -311,7 +325,7 @@ export async function createEmployeeAction(
 export async function deleteEmployeeAction(id: number) {
   try {
     const deletedEmployee = await db.employee.delete({
-      where: { id },
+      where: { id }
     })
     return actionResponse(200, "Employee has been deleted.")
   } catch (error) {

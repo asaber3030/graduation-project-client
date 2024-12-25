@@ -20,7 +20,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog"
 import {
   AlertDialog,
@@ -30,7 +30,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialogTitle
 } from "@/components/ui/alert-dialog"
 
 interface Props {
@@ -48,7 +48,7 @@ export const DeleteModal = ({
   deletedId,
   children,
   asChild = true,
-  forceAction,
+  forceAction
 }: Props) => {
   const [open, setOpen] = useState(false)
   const [secondaryModal, setSecondaryModal] = useState(false)
@@ -66,7 +66,7 @@ export const DeleteModal = ({
         return
       }
       showResponseMessage(data)
-    },
+    }
   })
 
   const forceDeleteMutation = useMutation({
@@ -75,7 +75,7 @@ export const DeleteModal = ({
       showResponseMessage(data, () => {
         setOpen(false)
         setSecondaryModal(false)
-      }),
+      })
   })
 
   const handleVerifyPassword = () => {

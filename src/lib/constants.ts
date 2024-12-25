@@ -1,7 +1,7 @@
 // https://techmed-project.vercel.app/api
 // http://localhost:3000/api
 
-export const apiURL = "https://techmed-project.vercel.app/api"
+export const apiURL = "http://localhost:3000/api"
 export const userImagePlaceholder = `/logo.png`
 export const medicineImagePlaceholder = `/defaults/medicine-placeholder.jpeg`
 
@@ -16,7 +16,7 @@ export const resourcesIcons = {
   vaccinations: "/defaults/resources/vaccinations.svg",
   invoices: "/defaults/resources/invoices.svg",
   permissions: "/defaults/resources/permissions.svg",
-  logs: "/defaults/resources/logs.svg",
+  logs: "/defaults/resources/logs.svg"
 }
 
 export const osIcons = {
@@ -24,5 +24,5 @@ export const osIcons = {
   linux: "/defaults/os/linux.svg",
   macos: "/defaults/os/mac.svg",
   android: "/defaults/os/android.svg",
-  ios: "/defaults/os/ios.svg",
+  ios: "/defaults/os/ios.svg"
 }

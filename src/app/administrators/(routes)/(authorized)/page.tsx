@@ -1,14 +1,14 @@
-import React from "react"
+import { URLShortcut } from "../../(helpers)/_components/dashboard/url-shortcut"
 import { URLBox } from "../../(helpers)/_components/dashboard/url-box"
 import { Plus, Users } from "lucide-react"
-import { adminRoutes } from "../../(helpers)/_utils/routes"
 import { Metadata } from "next"
-import { URLShortcut } from "../../(helpers)/_components/dashboard/url-shortcut"
+
 import { adminGlobalIcons } from "../../(helpers)/_utils/constants"
+import { adminRoutes } from "../../(helpers)/_utils/routes"
 import { tableCounts } from "../../(helpers)/_actions/dashboard"
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "Dashboard"
 }
 
 export default async function Home() {
@@ -75,24 +75,12 @@ export default async function Home() {
         <div className="grid xl:grid-cols-6 grid-cols-1 gap-2">
           <URLShortcut label="Create Doctor" icon={Plus} href={adminRoutes.doctors.root} />
           <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
-          <URLShortcut label="Patients" icon={Users} href={adminRoutes.doctors.root} />
+          <URLShortcut label="Hospitals" icon={Users} href={adminRoutes.doctors.root} />
+          <URLShortcut label="Prescriptions" icon={Users} href={adminRoutes.doctors.root} />
+          <URLShortcut label="Inventories" icon={Users} href={adminRoutes.doctors.root} />
+          <URLShortcut label="Medicine" icon={Users} href={adminRoutes.doctors.root} />
+          <URLShortcut label="Permissions" icon={Users} href={adminRoutes.doctors.root} />
+          <URLShortcut label="Employees" icon={Users} href={adminRoutes.doctors.root} />
         </div>
       </div>
     </div>

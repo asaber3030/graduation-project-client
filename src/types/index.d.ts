@@ -22,7 +22,7 @@ export type APIResponse<T, D> = {
   error?: D
 }
 
-export type LoginProvider = "admins" | "patients" | "doctors"
+export type LoginProvider = "admins" | "patients" | "employees"
 export type GlobalLoginData = {
   data: z.infer<typeof GlobalLoginSchema>
   rememberMe?: boolean
